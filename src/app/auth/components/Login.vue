@@ -36,7 +36,9 @@
 </template>
 
 <script>
-import { http } from "../../shared/services/httpClient";
+import { http } from "../../shared/services";
+import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
+import { actionTypes as userActionTypes } from "../../auth/auth-state";
 
 export default {
   name: "Login",
@@ -65,17 +67,19 @@ export default {
           username: this.username,
           password: this.password
         })
-        .then(userInfo => {
-          localStorage.setItem("user", JSON.stringify(userInfo.data));
-          localStorage.setItem("authtoken", userInfo.data._kmd.authtoken);
+        .then(({ data }) => {
+          localStorage.setItem("authtoken", data._kmd.authtoken);
+          this.$store.dispatch(userActionTypes.loginSuccess, {
+            userInfo: data,
+            authtoken: data._kmd.authtoken,
+            isAuth: true
+          });
           this.$bus.$emit("logged", "User logged");
           this.$router.push("/");
+          this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+            message: "Success Login"
+          });
         });
-    },
-    validate() {
-      if (this.$refs.loginForm.validate()) {
-        this.snackbar = true;
-      }
     }
   }
 };

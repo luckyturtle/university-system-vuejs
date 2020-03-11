@@ -46,7 +46,11 @@ http.interceptors.response.use(
         return response;
     },
     error => {
-        /** Do something with response error */
+        // console.log(error.message);
+        // store.dispatch(snackbarActionTypes.setSnackbarError, {
+        //     message: error.message
+        // });
+
         return Promise.reject(error);
     }
 );

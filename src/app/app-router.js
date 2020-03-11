@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import authRoutes from './auth/auth-routes'
-import courseRoutes from './courses/course-routes'
+import { authRoutes } from './auth'
+import { courseRoutes } from './courses'
 import { Profile } from './shared/components';
 import { Welcome } from './shared/components';
 import { NotFound } from './shared/components';

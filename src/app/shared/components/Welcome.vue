@@ -1,17 +1,18 @@
 <template>
   <div>
     <h1 v-if="isAuth">Welcome</h1>
-    <h1 v-if="!isAuth">Anonymus</h1>
+    <h1 v-else>Anonymus</h1>
+   
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Welcome',
-  data(){
+  name: "Welcome",
+  data() {
     return {
-      isAuth: localStorage.getItem("user") !== null
-    }
+      isAuth: this.$store.state.authState.isAuth
+    };
   },
   // props: {
   //   isAuth: {
@@ -21,7 +22,7 @@ export default {
   // },
   created() {
     this.$bus.$on("logged", () => {
-      this.isAuth = localStorage.getItem("user") !== null;
+      this.isAuth = this.$store.state.authState.isAuth;
     });
   }
 };

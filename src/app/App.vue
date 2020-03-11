@@ -1,5 +1,6 @@
 <template>
   <v-app class="app">
+    <SnackBar />
     <Navbar />
     <v-content>
       <router-view />
@@ -11,24 +12,25 @@
 <script>
 import { Navbar } from "./shared/components";
 import { Footer } from "./shared/components";
-
+import { SnackBar } from "./shared/components";
 export default {
   name: "App",
 
   components: {
     Navbar,
-    Footer
+    Footer,
+    SnackBar,
   },
 
-  data: () => ({
-    //
-  })
+  data() {
+    return {};
+  }
 };
 </script>
 
 <style scoped>
 .app {
-  background-image: url("../assets/images/higher-ed.jpg") !important;
+  background-image: url("../../public/images/higher-ed.jpg") !important;
   background-size: cover !important;
 }
 </style>

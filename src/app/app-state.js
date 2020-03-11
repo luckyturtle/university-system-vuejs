@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
-import coursesState from './courses';
+import { courseState } from './courses';
+import { authState } from './auth';
+import sharedState from './shared/shared-state';
 
 Vue.use(Vuex);
 
@@ -10,6 +11,8 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    coursesState
+    courseState,
+    authState,
+    sharedState
   }
 });
