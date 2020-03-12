@@ -4,7 +4,7 @@
       <h2>Register From</h2>
       <v-form @submit.prevent="register" ref="registerForm" v-model="valid">
         <v-container class="d-flex justify-space-between">
-          <v-container>
+          <v-container class="mr-6">
             <v-text-field v-model="username" :rules="usernameRules" label="Username" required></v-text-field>
             <v-text-field
               v-model="password"
@@ -28,18 +28,10 @@
               @click:append="showRepeatPass = !showRepeatPass"
             ></v-text-field>
           </v-container>
-
-          <v-container class="left">
+          <v-container>
             <v-text-field v-model="name" :rules="nameRules" label="Name" required></v-text-field>
+            
             <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
-            <v-select
-              v-model="select"
-              :items="items"
-              :rules="[v => !!v || 'Position is required']"
-              label="Position"
-              required
-            ></v-select>
-
             <v-checkbox
               v-model="checkbox"
               :rules="[v => !!v || 'You must agree to continue!']"
@@ -50,14 +42,7 @@
         </v-container>
 
         <v-container class="d-flex justify-space-between actions">
-          <v-btn
-            type="submit"
-            :disabled="!valid"
-            color="success"
-            class="mr-4"
-            @click="validate"
-            width="300"
-          >Register</v-btn>
+          <v-btn type="submit" :disabled="!valid" color="success" class="mr-4" width="300">Register</v-btn>
           <v-btn color="error" class="mr-4" @click="reset" width="100">Reset</v-btn>
         </v-container>
         <v-divider></v-divider>
@@ -72,7 +57,7 @@
 
 <script>
 import { http } from "../../shared/services/httpClient";
-
+import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
 export default {
   name: "Register",
   data() {
@@ -102,7 +87,6 @@ export default {
         v => !!v || "E-mail is required",
         v => /.+@.+\..+/.test(v) || "E-mail must be valid"
       ],
-      select: "",
       items: ["Teacher", "Student"]
     };
   },
@@ -112,18 +96,14 @@ export default {
         username: this.username,
         password: this.password,
         name: this.name,
-        email: this.email,
-        position: this.select
+        email: this.email
       };
       http.post("", user).then(() => {
         this.$router.push("/login");
+        this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+          message: "Success Register"
+        });
       });
-    },
-
-    validate() {
-      if (this.$refs.registerForm.validate()) {
-        this.snackbar = true;
-      }
     },
     reset() {
       this.$refs.registerForm.reset();
@@ -138,9 +118,6 @@ export default {
 }
 .text {
   margin-top: 20px;
-}
-.left {
-  margin-left: 20px;
 }
 .wrraper {
   display: flex;
