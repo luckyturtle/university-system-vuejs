@@ -51,6 +51,7 @@
 
 <script>
 import { http } from "../../shared/services";
+import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
 
 export default {
   name: "CourseCreate",
@@ -80,9 +81,19 @@ export default {
         startDate: this.startDate,
         image: this.image
       };
-      http.post("courses", course).then(() => {
-        this.$router.push("/courses");
-      });
+      http
+        .post("courses", course)
+        .then(() => {
+          this.$router.push("/courses");
+          this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+            message: "Successfly created course!"
+          });
+        })
+        .catch(err => {
+          this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
+            message: err.message
+          });
+        });
     }
   }
 };

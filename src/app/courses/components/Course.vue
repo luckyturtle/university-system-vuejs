@@ -42,8 +42,10 @@
                     <h3 class="title">Select student from student list</h3>
                     <v-col cols="12" sm="8">
                       <v-select
-                        :items="studentList"
+                        :items="allStudents"
                         v-model="selectedStudent"
+                        item-text="name"
+                        return-object
                         dense
                         label="Select student..."
                       ></v-select>
@@ -58,16 +60,16 @@
                     </v-col>
                   </template>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+                    <v-text-field v-model="editedStudent.name" label="Name"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.town" label="Town"></v-text-field>
+                    <v-text-field v-model="editedStudent.town" label="Town"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.age" label="Age"></v-text-field>
+                    <v-text-field v-model="editedStudent.age" label="Age"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.groupe" label="Groupe"></v-text-field>
+                    <v-text-field v-model="editedStudent.groupe" label="Groupe"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -89,14 +91,14 @@
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+      <v-btn color="primary" dark class="mb-2" v-on="on">New Student</v-btn>
     </template>
   </v-data-table>
 </template>
 
 <script>
 import { http } from "../../shared/services";
-
+import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
 export default {
   name: "Course",
   data() {
@@ -118,7 +120,7 @@ export default {
       allStudents: [],
       students: [],
       editedIndex: -1,
-      editedItem: {
+      editedStudent: {
         name: "",
         town: "",
         age: "",
@@ -141,14 +143,10 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "Add Student" : "Edit Student";
     },
-    studentList() {
-      return this.allStudents.map(s => s.name);
-    },
     isEditForm() {
       return this.formTitle === "Edit Student";
     }
   },
-
   watch: {
     dialog(val) {
       val || this.close();
@@ -161,76 +159,117 @@ export default {
       .then(({ data }) => {
         this.students = data;
         this.loading = false;
+      })
+      .catch(err => {
+        this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
+          message: err.message
+        });
       });
     http
       .get("students")
       .then(students => {
         this.allStudents = students.data;
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
+          message: err.message
+        });
+      });
   },
 
   methods: {
     editItem(student) {
       this.editedIndex = this.students.indexOf(student);
-      this.editedItem = Object.assign({}, student);
+      this.editedStudent = Object.assign({}, student);
       this.dialog = true;
     },
 
     deleteItem(student) {
+      student.courses = student.courses.filter(c => c !== this.course._id);
       http
-        .delete(`students/${student._id}`)
+        .put(`students/${student._id}`, student)
         .then(() => {
-          console.log("Deleted!");
+          this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+            message: "Successfly deleted!"
+          });
         })
-        .catch(err => console.error(err));
-      const index = this.students.indexOf(student);
-      confirm("Are you sure you want to delete this item?") &&
-        this.students.splice(index, 1);
+        .catch(err => {
+          this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
+            message: err.message
+          });
+        });
+      alert("Are you sure you want to delete this student?");
+      this.students = this.students.filter(s => s !== student);
     },
 
     close() {
       this.dialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedStudent = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       }, 300);
     },
-
     save() {
       if (this.editedIndex > -1) {
         http
-          .put(`students/${this.editedItem._id}`, this.editedItem)
-          .then(() => {})
-          .catch(err => console.error(err));
-        Object.assign(this.students[this.editedIndex], this.editedItem);
-      } else {
-        this.editedItem.courses.push(this.course._id);
+          .put(`students/${this.editedStudent._id}`, this.editedStudent)
+          .then(() => {
+            this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+              message: "Successfly updated!"
+            });
+          })
+          .catch(err => {
+            this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
+              message: err.message
+            });
+          });
+        Object.assign(this.students[this.editedIndex], this.editedStudent);
+      } else if (this.selectedStudent) {
+        this.editedStudent.courses = this.editedStudent.courses.concat(
+          this.course._id
+        );
+        this.students.push(this.editedStudent);
         http
-          .post("students", this.editedItem)
-          .then(() => {})
-          .catch(err => console.error(err));
-        this.students.push(this.editedItem);
+          .put(`students/${this.editedStudent._id}`, this.editedStudent)
+          .then(() => {
+            this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+              message: "Successfly added!"
+            });
+          })
+          .catch(err => {
+            this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
+              message: err.message
+            });
+          });
+      } else {
+        this.editedStudent.courses = this.editedStudent.courses.concat(
+          this.course._id
+        );
+        this.students.push(this.editedStudent);
+        http
+          .post("students", this.editedStudent)
+          .then(() => {
+            this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+              message: "Successfly added!"
+            });
+          })
+          .catch(err => {
+            this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
+              message: err.message
+            });
+          });
       }
       this.close();
     },
     reset() {
-      this.editedItem.name = "";
-      this.editedItem.town = "";
-      this.editedItem.age = "";
-      this.editedItem.groupe = "";
+      this.editedStudent.name = "";
+      this.editedStudent.town = "";
+      this.editedStudent.age = "";
+      this.editedStudent.groupe = "";
       this.selectedStudent = "";
     },
     select() {
-      http
-        .get(`students/?query={"name":"${this.selectedStudent}"}`)
-        .then(({ data }) => {
-          const { name, town, age, groupe } = data[0];
-          this.editedItem.name = name;
-          this.editedItem.town = town;
-          this.editedItem.groupe = groupe;
-          this.editedItem.age = age;
-        });
+      this.editedStudent = this.selectedStudent;
     }
   }
 };
