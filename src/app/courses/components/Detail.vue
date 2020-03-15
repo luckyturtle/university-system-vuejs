@@ -1,39 +1,32 @@
 <template>
-  <v-container>
-    <Course v-if="course" v-bind:course="course" />
+  <v-container v-if="course">
+    <Course :course="course" />
   </v-container>
 </template>
 
 <script>
-import Course from "./Course";
-import { http } from "../../shared/services";
-import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
+import Course from './Course';
+import { mapGetters, mapActions } from 'vuex';
+import { getCourse  } from '../course-state';
 export default {
-  name: "Detail",
+  name: 'Detail',
   components: {
     Course
   },
   data() {
-    return {
-      course: null
-    };
+    return {};
+  },
+  computed: {
+    ...mapGetters(['course'])
+  },
+  methods: {
+    ...mapActions([getCourse])
   },
   created() {
     const id = this.$route.params.id;
-
-    http
-      .get(`courses/?query={"_id":"${id}"}`)
-      .then(({ data }) => {
-        this.course = data[0];
-      })
-      .catch(err => {
-        this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
-          message: err.message
-        });
-      });
+    this[getCourse]({ id });
   }
 };
 </script>
 
-<style>
-</style>
+<style scoped></style>
