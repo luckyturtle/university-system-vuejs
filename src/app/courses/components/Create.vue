@@ -104,7 +104,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { createCourse } from '../course-state';
+import { createCourse } from '../+store/course-state';
 import { rules } from '../../shared/services';
 export default {
   name: 'Create',

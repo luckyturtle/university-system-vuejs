@@ -57,7 +57,7 @@
 
 <script>
 import { http } from "../../shared/services/httpClient";
-import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
+import { setSnackbarSuccess } from "../../shared/+store/snackbar-state";
 export default {
   name: "Register",
   data() {
@@ -100,7 +100,7 @@ export default {
       };
       http.post("", user).then(() => {
         this.$router.push("/login");
-        this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
+        this.$store.dispatch(setSnackbarSuccess, {
           message: "Success Register"
         });
       });

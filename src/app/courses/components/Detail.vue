@@ -7,7 +7,7 @@
 <script>
 import Course from './Course';
 import { mapGetters, mapActions } from 'vuex';
-import { getCourse  } from '../course-state';
+import { getCourse  } from '../+store/course-state';
 export default {
   name: 'Detail',
   components: {

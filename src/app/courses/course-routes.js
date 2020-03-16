@@ -1,6 +1,6 @@
-import List from './components/List';
-import Create from './components/Create';
-import Detail from './components/Detail'
+import List from './components/List.vue';
+import Create from './components/Create.vue';
+import Detail from './components/Detail.vue'
 
 export default [
     { path: '', redirect: { name: 'course-list' } },

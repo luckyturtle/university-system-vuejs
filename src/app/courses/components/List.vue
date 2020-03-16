@@ -52,7 +52,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { getCourses, deleteCourse } from '../course-state';
+import { getCourses, deleteCourse } from '../+store/course-state';
 export default {
   name: 'List',
   data() {

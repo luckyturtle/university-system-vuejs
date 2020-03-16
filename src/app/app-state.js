@@ -2,17 +2,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { courseState } from './courses';
 import { authState } from './auth';
-import sharedState from './shared/shared-state';
+import snackbarState from './shared/+store/snackbar-state';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
   modules: {
     courseState,
     authState,
-    sharedState
+    snackbarState
   }
 });

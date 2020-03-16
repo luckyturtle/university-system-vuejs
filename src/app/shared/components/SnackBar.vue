@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { actionTypes } from "../shared-state";
+import { resetSnackbar } from "../+store/snackbar-state";
 export default {
   data() {
     return {
@@ -18,16 +18,16 @@ export default {
 
   created: function() {
     this.$store.watch(
-      state => state.sharedState.snackbar.message,
+      state => state.snackbarState.snackbar.message,
       () => {
-        const msg = this.$store.state.sharedState.snackbar.message;
-        const color = this.$store.state.sharedState.snackbar.color;
+        const msg = this.$store.state.snackbarState.snackbar.message;
+        const color = this.$store.state.snackbarState.snackbar.color;
 
         if (msg !== "") {
           this.show = true;
           this.message = msg;
           this.color = color;
-          this.$store.commit(actionTypes.resetSnackbar, {
+          this.$store.commit(resetSnackbar, {
             color: "",
             message: ""
           });

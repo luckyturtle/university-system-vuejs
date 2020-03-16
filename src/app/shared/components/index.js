@@ -1,6 +1,6 @@
-export { default as Footer } from './Footer';
-export { default as Navbar } from './Navbar';
-export { default as NotFound } from './NotFound';
-export { default as Welcome } from './Welcome';
-export { default as Profile } from './Profile';
-export { default as SnackBar } from './SnackBar';
+export { default as Footer } from './Footer.vue';
+export { default as Navbar } from './Navbar.vue';
+export { default as NotFound } from './NotFound.vue';
+export { default as Welcome } from './Welcome.vue';
+export { default as Profile } from './Profile.vue';
+export { default as SnackBar } from './SnackBar.vue';

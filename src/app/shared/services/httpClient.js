@@ -1,5 +1,7 @@
 import axios from 'axios';
-// import {store} from '../../app-state'
+import store from '../../app-state';
+import { setSnackbarError } from '../+store/snackbar-state';
+
 const baseUrl = 'https://baas.kinvey.com';
 const appKey = 'kid_BkLVMjt4U';
 const appSecret = 'e3622f177f85429b86921b036f43a8a4';
@@ -10,14 +12,7 @@ const config = {
 
 const http = axios.create(config);
 
-/**
- * Auth interceptors
- * @description Configuration related to AUTH token can be done in interceptors.
- * Currenlty it is just doing nothing but idea to to show the capability of axios and its interceptors
- * In future, interceptors can be created into separate files and consumed into multiple http clients
- * @param {*} config
- */
-const authInterceptor = config => {
+const authInterceptor = function(config) {
   if (
     (config.url === 'login' || config.url === '') &&
     config.method === 'post'
@@ -28,9 +23,12 @@ const authInterceptor = config => {
       Authorization: 'Basic ' + btoa(`${appKey}:${appSecret}`)
     };
   } else {
-    const token = localStorage.getItem("authtoken");
+    const token = store.getters.authtoken;
     config.baseURL = `${baseUrl}/appdata/${appKey}`;
-    config.headers = { 'Content-Type': 'application/json', Authorization: 'Kinvey ' + token }
+    config.headers = {
+      'Content-Type': 'application/json',
+      Authorization: 'Kinvey ' + token
+    };
   }
   return config;
 };
@@ -50,10 +48,16 @@ http.interceptors.response.use(
     return response;
   },
   error => {
-    // console.log(error.message);
-    // store.dispatch(snackbarActionTypes.setSnackbarError, {
-    //     message: error.message
-    // });
+    if (error.response.status === 401) {
+      store.dispatch(setSnackbarError, {
+        message: `${error.response.statusText}: ${error.response.data.description}`
+      });
+    } else {
+      store.dispatch(setSnackbarError, {
+        message: `${error.response.statusText}`
+      });
+    }
+
     return Promise.reject(error);
   }
 );

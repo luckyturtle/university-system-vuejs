@@ -144,7 +144,7 @@ import {
   postStudent,
   updateStudent,
   removeStudent
-} from '../course-state';
+} from '../+store/course-state';
 
 export default {
   name: 'Course',

@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { actionTypes as userActionTypes } from "../../auth/auth-state";
+import { actionTypes as userActionTypes } from "../../auth/+store/auth-state";
 import { http } from "../services";
 
 export default {

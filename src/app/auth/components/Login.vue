@@ -3,7 +3,11 @@
     <v-row align="center" class="card">
       <h2>Login</h2>
       <v-form @submit.prevent="login" v-model="valid" ref="loginForm">
-        <v-text-field v-model="username" :rules="usernameRules" label="Username"></v-text-field>
+        <v-text-field
+          v-model="username"
+          :rules="usernameRules"
+          label="Username"
+        ></v-text-field>
         <v-text-field
           v-model="password"
           name="password"
@@ -23,7 +27,14 @@
           required
         ></v-checkbox>
         <v-container class="actions">
-          <v-btn type="submit" :disabled="!valid" color="success" class="mr-4" width="300">Login</v-btn>
+          <v-btn
+            type="submit"
+            :disabled="!valid"
+            color="success"
+            class="mr-4"
+            width="300"
+            >Login</v-btn
+          >
         </v-container>
         <v-divider></v-divider>
       </v-form>
@@ -36,48 +47,48 @@
 </template>
 
 <script>
-import { http } from "../../shared/services";
-import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
-import { actionTypes as userActionTypes } from "../../auth/auth-state";
+import { http } from '../../shared/services';
+import { setSnackbarSuccess } from '../../shared/+store/snackbar-state';
+import { actionTypes as userActionTypes } from '../../auth/+store/auth-state';
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
       valid: true,
       show: false,
       checkbox: false,
 
-      username: "",
+      username: '',
       usernameRules: [
-        v => !!v || "Username is required",
-        v => (v && v.length <= 10) || "Username must be less than 10 characters"
+        v => !!v || 'Username is required',
+        v => (v && v.length <= 10) || 'Username must be less than 10 characters'
       ],
-      password: "",
+      password: '',
       passwordRulse: {
-        required: v => !!v || "Password is required.",
-        min: v => v.length >= 6 || "Min 6 characters"
+        required: v => !!v || 'Password is required.',
+        min: v => v.length >= 6 || 'Min 6 characters'
       }
     };
   },
   methods: {
     login() {
       http
-        .post("login", {
+        .post('login', {
           username: this.username,
           password: this.password
         })
         .then(({ data }) => {
-          localStorage.setItem("authtoken", data._kmd.authtoken);
+          localStorage.setItem('authtoken', data._kmd.authtoken);
           this.$store.dispatch(userActionTypes.loginSuccess, {
             userInfo: data,
             authtoken: data._kmd.authtoken,
             isAuth: true
           });
-          this.$bus.$emit("logged", "User logged");
-          this.$router.push("/");
-          this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
-            message: "Success Login"
+          this.$bus.$emit('logged', 'User logged');
+          this.$router.push('/');
+          this.$store.dispatch(setSnackbarSuccess, {
+            message: 'Success Login'
           });
         });
     }
