@@ -34,8 +34,12 @@
         <span class="mr-4">Create Course</span>
       </v-btn>
     </router-link>
-    <v-text-field v-model="searchInput" placeholder="Type keyword..."></v-text-field>
-    <v-btn class="mr-10" icon @click="search">
+    <v-text-field
+      v-if="isAuth"
+      v-model="searchInput"
+      placeholder="Type keyword..."
+    ></v-text-field>
+    <v-btn v-if="isAuth" class="mr-10" icon @click="search">
       <v-icon>search</v-icon>
     </v-btn>
 
@@ -61,16 +65,18 @@
 </template>
 
 <script>
-import { actionTypes as userActionTypes } from "../../auth/+store/auth-state";
-import { http } from "../services";
-
+import { actionTypes as userActionTypes } from '../../auth/+store/auth-state';
+import { http } from '../services';
+import { mapGetters } from 'vuex';
 export default {
-  name: "Navbar",
+  name: 'Navbar',
   data() {
     return {
-      isAuth: this.$store.state.authState.isAuth,
-      searchInput: ""
+      searchInput: ''
     };
+  },
+  computed: {
+    ...mapGetters(['isAuth'])
   },
   methods: {
     logout() {
@@ -88,12 +94,12 @@ export default {
           }
         });
     }
-  },
-  created() {
-    this.$bus.$on("logged", () => {
-      this.isAuth = this.$store.state.authState.isAuth;
-    });
   }
+  // created() {
+  //   this.$bus.$on("logged", () => {
+  //     this.isAuth = this.$store.state.authState.isAuth;
+  //   });
+  // }
 };
 </script>
 

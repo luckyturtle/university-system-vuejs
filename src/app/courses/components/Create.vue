@@ -12,13 +12,13 @@
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="title"
-                    :rules="[rules.required]"
+                    :rules="[rules.required('Title')]"
                     prepend-icon="label"
                     label="Title"
                   ></v-text-field>
                   <v-text-field
                     v-model="duration"
-                    :rules="[rules.required, rules.range]"
+                    :rules="[rules.required('Duration'), rules.range]"
                     prepend-icon="access_alarms"
                     label="Duration"
                   ></v-text-field>
@@ -27,7 +27,7 @@
                     v-model="selectedFile"
                     label="Image"
                     prepend-icon="mdi-camera"
-                    :rules="[rules.required]"
+                    :rules="[rules.required('Image')]"
                     ref="file"
                   ></v-file-input>
                 </v-col>
@@ -45,7 +45,7 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field
                         v-model="startDate"
-                        :rules="[rules.required]"
+                        :rules="[rules.required('This field')]"
                         class="mt-3"
                         label="Start Date"
                         prepend-icon="event"
@@ -70,10 +70,10 @@
                   </v-menu>
                   <v-textarea
                     v-model="description"
-                    :rules="[rules.required, rules.length(100)]"
+                    :rules="[rules.required('Description'), rules.length(150)]"
                     prepend-icon="comment"
                     label="Description"
-                    counter="100"
+                    counter="150"
                     no-resize
                     rows="5"
                     row-height="15"
@@ -88,7 +88,7 @@
                       :disabled="!valid"
                       color="success"
                       class="mr-4"
-                      width="300"
+                      width="200"
                       >Create</v-btn
                     >
                   </v-container>
