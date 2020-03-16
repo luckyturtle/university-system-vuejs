@@ -50,6 +50,7 @@ const actions = {
     commit(getCourse, data);
   },
   async [deleteCourse]({ commit, dispatch }, payload) {
+    alert('Are you sure you want to delete this course?');
     const { id } = payload;
     const { data } = await http.get('students');
     data
@@ -111,7 +112,7 @@ const actions = {
         const course = Object.assign(payload, { imageUrl: url });
         await http.post('courses', course);
         dispatch(setSnackbarSuccess, {
-          message: 'Successfully Removed'
+          message: 'Successfully Created'
         });
       }
     );

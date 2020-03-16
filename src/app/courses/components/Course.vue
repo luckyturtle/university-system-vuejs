@@ -81,28 +81,28 @@
                           <v-text-field
                             v-model="editedStudent.name"
                             label="Name"
-                            :rules="[rules.required]"
+                            :rules="[rules.required('This field')]"
                           ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             v-model="editedStudent.town"
                             label="Town"
-                            :rules="[rules.required]"
+                            :rules="[rules.required('This field')]"
                           ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             v-model="editedStudent.age"
                             label="Age"
-                            :rules="[rules.required]"
+                            :rules="[rules.required('This field')]"
                           ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             v-model="editedStudent.groupe"
                             label="Groupe"
-                            :rules="[rules.required]"
+                            :rules="[rules.required('This field')]"
                           ></v-text-field>
                         </v-col>
                       </v-row>

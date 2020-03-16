@@ -5,7 +5,7 @@ const initialState = {
   userInfo: null
 };
 
-export const actionTypes = {
+const actionTypes = {
   loginSuccess: '[AUTH] LOGIN SUCCESS',
   registerSuccess: '[AUTH] REGISTER SUCCESS',
   logoutSuccess: '[AUTH] LOGOUT SUCCESS'
@@ -31,8 +31,12 @@ const actions = {
       isAuth: true
     });
   },
-  async [logoutSuccess]({ commit }) {
-    commit(actionTypes.logoutSuccess);
+  async [logoutSuccess]({ commit, dispatch }) {
+    localStorage.clear();
+    dispatch(setSnackbarSuccess, {
+      message: 'Successfully Logout!'
+    });
+    commit(logoutSuccess);
   }
 };
 
