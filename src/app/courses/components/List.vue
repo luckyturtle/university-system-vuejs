@@ -6,7 +6,7 @@
           <v-img
             class="white--text align-end"
             height="200px"
-            :src="course.image"
+            :src="course.imageUrl"
           ></v-img>
           <v-card-title class="title">
             <div>{{ course.title }}</div>

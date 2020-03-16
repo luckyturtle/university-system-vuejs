@@ -24,10 +24,11 @@
                   ></v-text-field>
 
                   <v-file-input
-                    v-model="image"
+                    v-model="selectedFile"
                     label="Image"
                     prepend-icon="mdi-camera"
-                    :rules="[]"
+                    :rules="[rules.required]"
+                    ref="file"
                   ></v-file-input>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -102,13 +103,11 @@
 </template>
 
 <script>
-import { http } from '../../shared/services';
-import { actionTypes as snackbarActionTypes } from '../../shared/shared-state';
-import { rules } from '../../shared/services/validators';
-
+import { mapActions } from 'vuex';
+import { createCourse } from '../course-state';
+import { rules } from '../../shared/services';
 export default {
   name: 'Create',
-
   data() {
     return {
       rules,
@@ -116,34 +115,23 @@ export default {
       valid: false,
       title: '',
       duration: '',
-      image: null,
+      selectedFile: null,
       startDate: null,
       description: ''
     };
   },
   methods: {
+    ...mapActions([createCourse]),
     create() {
-      const course = {
+      this[createCourse]({
         title: this.title,
         duration: this.duration,
         startDate: this.startDate,
         available: true,
         description: this.description,
-        image: this.image
-      };
-      http
-        .post('courses', course)
-        .then(() => {
-          this.$router.push('/courses');
-          this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
-            message: 'Successfly created course!'
-          });
-        })
-        .catch(err => {
-          this.$store.dispatch(snackbarActionTypes.setSnackbarError, {
-            message: err.message
-          });
-        });
+        selectedFile: this.selectedFile,
+        imageUrl: null
+      });
     }
   }
 };

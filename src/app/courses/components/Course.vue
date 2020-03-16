@@ -15,7 +15,7 @@
               <v-row>
                 <v-col cols="12" md="1">
                   <v-avatar class="">
-                    <img :src="course.image" alt="JS" />
+                    <img :src="course.imageUrl" alt="JS" />
                   </v-avatar>
                 </v-col>
                 <v-col cols="12" md="3">
@@ -181,7 +181,8 @@ export default {
         name: '',
         town: '',
         age: '',
-        groupe: ''
+        groupe: '',
+        courses: []
       }
     };
   },

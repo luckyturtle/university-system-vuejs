@@ -1,4 +1,6 @@
 import { http } from '../shared/services';
+import { dbStorage } from '../shared/services';
+import router from '../app-router'
 import { actionTypes as snackbarActionTypes } from '../shared/shared-state';
 const initialState = {
   allCourses: [],
@@ -10,6 +12,7 @@ const actionTypes = {
   getCourses: '[COURSE] GET ALL COURSES SUCCESS',
   getCourse: '[COURSE] GET SINGLE COURSE SUCCESS',
   deleteCourse: '[COURSE] DELETE COURSE SUCCESS',
+  createCourse: '[COURSE] CREATE NEW COURSE SUCCESS',
   getStudents: '[STUDENT] GET ALL STUDENTS SUCCESS',
   postStudent: '[STUDENT] POST STUDENT SUCCESS',
   updateStudent: '[STUDENT] UPDATE STUDENT SUCCESS',
@@ -25,7 +28,8 @@ export const {
   removeStudent,
   getCourse,
   getCourseStudents,
-  deleteCourse
+  deleteCourse,
+  createCourse
 } = actionTypes;
 
 const getters = {
@@ -134,6 +138,36 @@ const actions = {
       dispatch(snackbarActionTypes.setSnackbarSuccess, {
         message: 'Successfully Updated'
       });
+    } catch (error) {
+      dispatch(snackbarActionTypes.setSnackbarError, {
+        message: error.message
+      });
+      console.error(error);
+    }
+  },
+  async [createCourse]({ dispatch }, payload) {
+    const { selectedFile: selectedFile } = payload;
+    try {
+      const task = dbStorage
+        .ref()
+        .child(`images/${selectedFile.name}`)
+        .put(selectedFile);
+      task.on(
+        'state_changed',
+        snapshot => {
+          console.log(snapshot);
+        },
+        error => console.error(error),
+        async function() {
+          const url = await task.snapshot.ref.getDownloadURL();
+          const course = Object.assign(payload, { imageUrl: url });
+          await http.post('courses', course);
+          router.push('/courses');
+          dispatch(snackbarActionTypes.setSnackbarSuccess, {
+            message: 'Successfully Removed'
+          });
+        }
+      );
     } catch (error) {
       dispatch(snackbarActionTypes.setSnackbarError, {
         message: error.message
