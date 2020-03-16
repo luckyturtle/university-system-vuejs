@@ -1,5 +1,8 @@
 <template>
-  <h1>NotFound</h1>
+  <v-img
+   src="/images/HTML-Yeti-404-Page.gif"
+ aspect-ratio="2.391"
+   />
 </template>
 
 <script>
@@ -8,6 +11,5 @@ name: 'NotFound'
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>
