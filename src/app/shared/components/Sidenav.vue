@@ -1,23 +1,23 @@
 <template>
-  <v-navigation-drawer v-model="drawer" absolute>
-    <v-list nav >
+  <v-navigation-drawer v-model="modifyDrawer" absolute>
+    <v-list nav>
       <v-list-item-group v-model="group" active-class="">
         <v-list-item v-if="isAuth">
-          <v-list-item-title>
-            <div class="search-input">
-              <v-text-field
-                v-model="searchInput"
-                placeholder="Type keyword..."
-              ></v-text-field>
-            </div>
-            <v-btn class="mr-6" icon @click="search">
+          <v-list-item-title class="d-flex align-center">
+            <v-text-field
+              v-model="searchInput"
+              placeholder="Type keyword..."
+              class="mr-6"
+            >
+            </v-text-field>
+            <v-btn class="ml-6" icon @click="search">
               <v-icon>search</v-icon>
             </v-btn>
           </v-list-item-title>
         </v-list-item>
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-            <router-link to="/profile">
+            <router-link class="router-link" to="/profile">
               <v-btn text>
                 <v-icon>account_circle</v-icon>
                 <span class="mr-4">Profile</span>
@@ -28,7 +28,7 @@
 
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-            <router-link to="/courses">
+            <router-link class="router-link" to="/courses">
               <v-btn text>
                 <v-icon>event_note</v-icon>
                 <span class="mr-4">Courses</span>
@@ -39,7 +39,7 @@
 
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-            <router-link to="/create-course" class="mr-8">
+            <router-link to="/create-course" class="router-link mr-8">
               <v-btn text>
                 <v-icon>create</v-icon>
                 <span class="mr-4">Create Course</span>
@@ -49,15 +49,15 @@
         </v-list-item>
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-              <v-btn text @click="logout">
-                <v-icon>cancel</v-icon>
-                <span class="mr-4">Logout</span>
-              </v-btn>
+            <v-btn text @click="logout">
+              <v-icon>cancel</v-icon>
+              <span class="mr-4">Logout</span>
+            </v-btn>
           </v-list-item-title>
         </v-list-item>
         <v-list-item v-if="!isAuth">
           <v-list-item-title>
-            <router-link to="/login">
+            <router-link class="router-link" to="/login">
               <v-btn text>
                 <v-icon>person_pin</v-icon>
                 <span class="mr-4">Login</span>
@@ -67,7 +67,7 @@
         </v-list-item>
         <v-list-item v-if="!isAuth">
           <v-list-item-title>
-            <router-link to="/register">
+            <router-link class="router-link" to="/register">
               <v-btn text>
                 <v-icon>perm_identity</v-icon>
                 <span class="mr-4">Register</span>
@@ -87,11 +87,19 @@ export default {
   data() {
     return {
       group: null,
-      searchInput: ''
+      searchInput: '',
     };
   },
   computed: {
-    ...mapGetters(['isAuth'])
+    ...mapGetters(['isAuth']),
+    modifyDrawer: {
+      get: function() {
+        return this.drawer;
+      },
+      set: function(val) {
+        this.$emit('onDrawer', val)
+      }
+    }
   },
   props: {
     drawer: {
@@ -106,4 +114,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.search-input {
+  width: 150px;
+  margin: 0;
+}
+</style>

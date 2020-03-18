@@ -1,13 +1,17 @@
 <template>
   <v-row>
+    <v-app-bar-nav-icon
+      class="side-nav"
+      @click.stop="drawer = !drawer"
+    ></v-app-bar-nav-icon>
     <v-row rows="12" md="4" align="center" justify="start" class="ml-4 logo">
-      <router-link to="/">
+      <router-link class="router-link" to="/">
         <div class="d-flex align-center">
           <v-img
             alt="University Logo"
             class="shrink mr-4 logo-img"
             contain
-            src="images/university-logo.png"
+            src="/images/university-logo.png"
             transition="scale-transition"
             width="70"
           />
@@ -24,19 +28,19 @@
         justify="end"
         class="mr-4"
       >
-        <router-link to="/profile">
+        <router-link class="router-link" to="/profile">
           <v-btn text>
             <v-icon>account_circle</v-icon>
             <span class="mr-4">Profile</span>
           </v-btn>
         </router-link>
-        <router-link to="/courses">
+        <router-link class="router-link" to="/courses">
           <v-btn text>
             <v-icon>event_note</v-icon>
             <span class="mr-4">Courses</span>
           </v-btn>
         </router-link>
-        <router-link to="/create-course" class="mr-8">
+        <router-link class="router-link mr-8" to="/create-course">
           <v-btn text>
             <v-icon>create</v-icon>
             <span class="mr-4">Create Course</span>
@@ -57,13 +61,13 @@
         </v-btn>
       </v-row>
       <v-row rows="12" md="8" v-else align="center" justify="end">
-        <router-link to="/login" v-if="!isAuth">
+        <router-link class="router-link" to="/login" v-if="!isAuth">
           <v-btn text>
             <v-icon>person_pin</v-icon>
             <span class="mr-4">Login</span>
           </v-btn>
         </router-link>
-        <router-link to="/register" v-if="!isAuth">
+        <router-link class="router-link" to="/register" v-if="!isAuth">
           <v-btn text>
             <v-icon>perm_identity</v-icon>
             <span class="mr-4">Register</span>
@@ -82,27 +86,32 @@ export default {
   name: 'Navbar',
   data() {
     return {
-      searchInput: ''
+      searchInput: '',
+      drawer: false
     };
   },
   computed: {
     ...mapGetters(['isAuth'])
   },
+  watch: {
+    drawer(val) {
+      this.$emit('onDrawer', val);
+    }
+  },
   methods: {
     ...mapActions([logoutSuccess]),
     logout() {
       this[logoutSuccess]();
-      this.$router.push('/')
+      this.$router.push('/');
     },
-    search() {
-      http
-        .get(`courses/?query={"title":"${this.searchInput}"}`)
-        .then(({ data }) => {
-          if (data.length > 0) {
-            const course = data[0];
-            this.$router.push(`/courses/${course._id}`);
-          }
-        });
+    async search() {
+      const { data: courses } = await http.get('courses');
+      const found = courses.filter(c =>
+        c.title.toLowerCase().includes(this.searchInput.toLowerCase())
+      );
+      this.$store.commit('[COURSE] SEARCH COURSES SUCCESS', found);
+
+      console.log(found);
     }
   }
   // created() {
