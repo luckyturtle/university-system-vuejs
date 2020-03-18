@@ -49,7 +49,7 @@
         <div class="search-input">
           <v-text-field
             v-model="searchInput"
-            placeholder="Type keyword..."
+            placeholder="Type course..."
           ></v-text-field>
         </div>
         <v-btn class="mr-6" icon @click="search">
@@ -80,8 +80,9 @@
 
 <script>
 import { logoutSuccess } from '../../auth/+store/auth-state';
-import { http } from '../services';
+import { http } from '../../shared/services';
 import { mapGetters, mapActions } from 'vuex';
+import { getSearchCourse } from '../../courses/+store/course-state';
 export default {
   name: 'Navbar',
   data() {
@@ -99,19 +100,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions([logoutSuccess]),
+    ...mapActions([logoutSuccess, getSearchCourse]),
     logout() {
       this[logoutSuccess]();
       this.$router.push('/');
     },
     async search() {
       const { data: courses } = await http.get('courses');
-      const found = courses.filter(c =>
-        c.title.toLowerCase().includes(this.searchInput.toLowerCase())
-      );
-      this.$store.commit('[COURSE] SEARCH COURSES SUCCESS', found);
-
-      console.log(found);
+      this[getSearchCourse]({ courses, searchInput: this.searchInput });
+      this.searchInput = '';
+      if (this.$route.path !== '/courses') {
+        this.$router.push('/courses');
+      }
     }
   }
   // created() {

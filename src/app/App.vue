@@ -18,7 +18,7 @@ import {
   AppFooter,
   AppSnackBar,
   AppSidenav
-} from './shared/components';
+} from './core/components';
 
 export default {
   name: 'App',
