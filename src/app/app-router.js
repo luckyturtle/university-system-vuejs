@@ -2,9 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { authRoutes } from './auth'
 import { courseRoutes } from './courses'
-import { Profile } from './shared/components';
-import { Welcome } from './shared/components';
-import { NotFound } from './shared/components';
+import { AppProfile } from './shared/components';
+import { AppWelcome } from './shared/components';
+import { AppNotFound } from './shared/components';
 
 Vue.use(VueRouter)
 
@@ -12,18 +12,18 @@ const appRoutes = [
     {
         path: '/',
         name: 'welcome',
-        component: Welcome,
+        component: AppWelcome,
         props: { isAuth: true }
     },
     {
         path: '/profile',
         name: 'profile',
-        component: Profile
+        component: AppProfile
     },
     {
         path: '*',
         name: 'page-not-found',
-        component: NotFound
+        component: AppNotFound
     }
 ]
 
