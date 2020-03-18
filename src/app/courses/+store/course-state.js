@@ -1,10 +1,13 @@
-import { http } from '../../shared/services';
-import { dbStorage } from '../../shared/services';
+import { http, dbStorage } from '../../shared/services';
 import { setSnackbarSuccess } from '../../shared/+store/snackbar-state';
+
 const initialState = {
   allCourses: [],
-  students: [],
-  course: null
+  allStudents: [],
+  course: {
+    _id: null
+  },
+  searchCourse: []
 };
 
 const actionTypes = {
@@ -15,7 +18,8 @@ const actionTypes = {
   getStudents: '[STUDENT] GET ALL STUDENTS SUCCESS',
   postStudent: '[STUDENT] POST STUDENT SUCCESS',
   updateStudent: '[STUDENT] UPDATE STUDENT SUCCESS',
-  removeStudent: '[STUDENT] REMOVE STUDENT FROM COURSE SUCCESS'
+  removeStudent: '[STUDENT] REMOVE STUDENT FROM COURSE SUCCESS',
+  getSearchCourse: '[COURSE] SEARCH COURSES SUCCESS'
 };
 
 export const {
@@ -28,13 +32,15 @@ export const {
   getCourse,
   getCourseStudents,
   deleteCourse,
-  createCourse
+  createCourse,
+  getSearchCourse
 } = actionTypes;
 
 const getters = {
   allCourses: state => state.allCourses,
-  allStudents: state => state.students,
-  course: state => state.course
+  allStudents: state => state.allStudents,
+  course: state => state.course,
+  searchCourse: state => state.getSearchCourse
 };
 
 const actions = {
@@ -52,8 +58,8 @@ const actions = {
   async [deleteCourse]({ commit, dispatch }, payload) {
     alert('Are you sure you want to delete this course?');
     const { id } = payload;
-    const { data } = await http.get('students');
-    data
+    const { data: students } = await http.get('students');
+    students
       .filter(s => s.courses.includes(id))
       .map(s => {
         s.courses = s.courses.filter(c => c !== id);
@@ -95,7 +101,7 @@ const actions = {
       message: 'Successfully Updated'
     });
   },
-  async [createCourse]({ dispatch }, payload) {
+  async [createCourse]({ commit, dispatch }, payload) {
     const { selectedFile: selectedFile } = payload;
     const task = dbStorage
       .ref()
@@ -110,18 +116,27 @@ const actions = {
       async function() {
         const url = await task.snapshot.ref.getDownloadURL();
         const course = Object.assign(payload, { imageUrl: url });
-        await http.post('courses', course);
+        const { data } = await http.post('courses', course);
+        commit(createCourse, { course: data });
         dispatch(setSnackbarSuccess, {
           message: 'Successfully Created'
         });
       }
     );
+  },
+  async [getSearchCourse]({commit}, payload){
+    commit(getSearchCourse, payload)
   }
 };
 
 const mutations = {
   [getCourses](state, payload) {
     Object.assign(state, { allCourses: payload });
+  },
+  [createCourse](state, payload) {
+    const { course } = payload;
+    const list = state.allCourses.concat(course);
+    Object.assign(state, { allCourses: list });
   },
   [getCourse](state, payload) {
     Object.assign(state, { course: payload });
@@ -131,7 +146,10 @@ const mutations = {
     Object.assign(state, { allCourses: list });
   },
   [getStudents](state, payload) {
-    Object.assign(state, { students: payload });
+    Object.assign(state, { allStudents: payload });
+  },
+  [getSearchCourse](state, payload){
+    Object.assign(state, {searchCourse: payload})
   }
 };
 

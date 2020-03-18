@@ -1,20 +1,25 @@
 <template>
-  <v-container v-if="course">
-    <Course :course="course" />
+  <v-container v-if="course._id === courseId">
+    <app-course :course="course"></app-course>
   </v-container>
+  <!-- <app-loader v-else /> -->
 </template>
 
 <script>
-import Course from './Course';
+import AppCourse from './Course';
+// import { AppLoader } from '../../shared/components';
 import { mapGetters, mapActions } from 'vuex';
-import { getCourse  } from '../+store/course-state';
+import { getCourse } from '../+store/course-state';
 export default {
   name: 'Detail',
   components: {
-    Course
+    AppCourse
+    // AppLoader
   },
   data() {
-    return {};
+    return {
+      courseId: null
+    };
   },
   computed: {
     ...mapGetters(['course'])
@@ -23,8 +28,8 @@ export default {
     ...mapActions([getCourse])
   },
   created() {
-    const id = this.$route.params.id;
-    this[getCourse]({ id });
+    this.courseId = this.$route.params.id;
+    this[getCourse]({ id: this.courseId });
   }
 };
 </script>

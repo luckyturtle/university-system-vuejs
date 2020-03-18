@@ -188,7 +188,10 @@ export default {
   },
 
   props: {
-    course: {}
+    course: {
+      type: Object,
+      required: true,
+    }
   },
 
   computed: {
@@ -208,7 +211,6 @@ export default {
   created() {
     this[getStudents]();
   },
-
   methods: {
     ...mapActions([getStudents, postStudent, updateStudent, removeStudent]),
 

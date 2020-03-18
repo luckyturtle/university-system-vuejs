@@ -132,7 +132,7 @@ export default {
         selectedFile: this.selectedFile,
         imageUrl: null
       });
-      this.$router.push('/courses')
+      this.$router.push('/courses');
     }
   }
 };
