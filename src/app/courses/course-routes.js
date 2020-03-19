@@ -1,10 +1,25 @@
-import List from './components/List.vue';
-import Create from './components/Create.vue';
-import Detail from './components/Detail.vue'
+
+import { authGuard } from '../shared/services/guards';
 
 export default [
-    { path: '', redirect: { name: 'course-list' } },
-    { path: '/courses', name: "course-list", component: List },
-    { path: '/create-course', name: "course-create", component: Create },
-    { path: '/courses/:id', name: 'detail', component: Detail }
-]
+  { path: '', redirect: { name: 'course-list' } },
+  {
+    path: '/courses',
+    name: 'course-list',
+    component: () => import('../courses/components/List.vue'),
+    beforeEnter: authGuard
+
+  },
+  {
+    path: '/create-course',
+    name: 'course-create',
+    component: () => import('../courses/components/Create.vue'),
+    beforeEnter: authGuard
+  },
+  {
+    path: '/courses/:id',
+    name: 'detail',
+    component: () => import('../courses/components/Detail.vue'),
+    beforeEnter: authGuard
+  }
+];
