@@ -1,6 +1,4 @@
 <template>
-  <v-container>
-    <v-row>
       <v-col cols="12" md="12" align="center">
         <v-card width="600" elevation="20">
           <v-card-text>
@@ -98,8 +96,6 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
-  </v-container>
 </template>
 
 <script>

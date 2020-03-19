@@ -1,6 +1,4 @@
 <template>
-  <v-container>
-    <v-row align="center" justify="center">
       <v-col cols="12" md="12" align="center">
         <v-card class="pa-6" elevation="20" width="600">
           <v-card-title class="d-flex justify-center">
@@ -32,7 +30,6 @@
                     class="input-group--focused"
                     @click:append="showPass = !showPass"
                   ></v-text-field>
-
                   <v-text-field
                     v-model="rePassword"
                     name="password"
@@ -71,7 +68,6 @@
                   ></v-checkbox>
                 </v-container>
               </v-container>
-
               <v-container class="d-flex justify-space-between actions">
                 <v-btn
                   type="submit"
@@ -88,7 +84,6 @@
             </v-form>
           </v-card-text>
           <v-divider></v-divider>
-
           <v-card-actions class="d-flex justify-center ">
             <span class="mr-4">
               Already have an account?
@@ -97,8 +92,6 @@
           </v-card-actions>
         </v-card>
       </v-col>
-    </v-row>
-  </v-container>
 </template>
 
 <script>

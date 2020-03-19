@@ -1,6 +1,4 @@
 <template>
-  <v-container>
-    <v-row align="center" justify="center">
       <v-col cols="12" md="12" align="center">
         <v-card class="pa-8" elevation="20" width="600">
           <v-card-title class="d-flex justify-center">
@@ -56,8 +54,6 @@
           </v-card-actions>
         </v-card>
       </v-col>
-    </v-row>
-  </v-container>
 </template>
 
 <script>

@@ -6,7 +6,11 @@
     </v-app-bar>
     <v-content>
       <app-sidenav :drawer="drawer" @onDrawer="drawer = $event"></app-sidenav>
-      <router-view />
+      <v-container>
+        <v-row align="center" justify="center">
+          <router-view />
+        </v-row>
+      </v-container>
     </v-content>
     <app-footer></app-footer>
   </v-app>

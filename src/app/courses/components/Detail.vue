@@ -1,7 +1,7 @@
 <template>
-  <v-container v-if="course._id === courseId">
-    <app-course :course="course"></app-course>
-  </v-container>
+    <v-col cols="12" md="8" v-if="course._id === courseId">
+      <app-course :course="course"></app-course>
+    </v-col>
   <!-- <app-loader v-else /> -->
 </template>
 
