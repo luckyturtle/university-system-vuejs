@@ -3,37 +3,27 @@
     :headers="headers"
     :items="students"
     sort-by="name"
-    class="elevation-20 pa-6"
+    height="300"
     :items-per-page="5"
     :loading="loading"
   >
     <template v-slot:top>
       <v-toolbar flat color="white" height="150">
-        <v-row>
-          <v-col cols="12" md="1">
-            <v-avatar class="">
-              <img :src="course.imageUrl" alt="JS" />
-            </v-avatar>
-          </v-col>
-          <v-col cols="12" md="3">
-            <p class="toolbar-title ">
-              <span>Course:</span>
-              {{ course.title }}
-            </p>
-          </v-col>
-          <v-col cols="12" md="3">
-            <p class="toolbar-title ">
-              <span>Duration:</span>
-              {{ course.duration }} weeks
-            </p>
-          </v-col>
-          <v-col cols="12" md="3">
-            <p class="toolbar-title">
-              <span>Start:</span>
-              {{ course.startDate }}
-            </p>
-          </v-col>
-        </v-row>
+        <v-avatar class="mr-6">
+          <v-img
+            aspect-ratio="1"
+            class="grey lighten-2 white--text align-end"
+            :src="course.imageUrl"
+          ></v-img>
+        </v-avatar>
+        <div class="d-flex">
+          <span class="blue--text darken-2 mr-2">Course:</span>
+          <p class="mr-6">{{ course.title }}</p>
+          <span class="blue--text darken-2 mr-2">Duration:</span>
+          <p class="mr-6">{{ course.duration }} weeks</p>
+          <span class="blue--text darken-2 mr-2">Start:</span>
+          <p class="mr-6">{{ course.startDate }}</p>
+        </div>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
@@ -103,7 +93,6 @@
                 </v-row>
               </v-container>
             </v-card-text>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
@@ -194,6 +183,7 @@ export default {
 
   created() {
     this[getStudents]();
+    console.log(this.course.students);
   },
   methods: {
     ...mapActions([getStudents, postStudent, updateStudent, removeStudent]),
@@ -243,12 +233,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.toolbar-title {
-  span {
-    font-weight: bold;
-    color: #3d88d2;
-  }
-  font-size: 20px;
+span {
+  font-weight: bold;
+  color: #3d88d2;
 }
 @media (max-width: 1200px) {
   .toolbar-title {

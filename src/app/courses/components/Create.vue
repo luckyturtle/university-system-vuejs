@@ -126,7 +126,8 @@ export default {
         available: true,
         description: this.description,
         selectedFile: this.selectedFile,
-        imageUrl: null
+        imageUrl: null,
+        students: []
       });
       this.$router.push('/courses');
     }

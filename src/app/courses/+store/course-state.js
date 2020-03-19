@@ -48,7 +48,13 @@ const getters = {
 const actions = {
   async [getCourses]({ commit }) {
     const { data } = await http.get('courses');
-    commit(actionTypes.getCourses, data);
+    const list = data.map(async c => {
+      const { data } = await http.get(`students/?query={"courses":"${c._id}"}`);
+      return { ...c, students: data };
+    });
+    Promise.all(list).then(data => {
+      commit(actionTypes.getCourses, data);
+    });
   },
   async [getCourse]({ commit }, payload) {
     const { id } = payload;
