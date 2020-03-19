@@ -7,7 +7,7 @@ const initialState = {
   course: {
     _id: null
   },
-  searchCourse: []
+  searchCourse: null
 };
 
 const actionTypes = {
@@ -19,7 +19,8 @@ const actionTypes = {
   postStudent: '[STUDENT] POST STUDENT SUCCESS',
   updateStudent: '[STUDENT] UPDATE STUDENT SUCCESS',
   removeStudent: '[STUDENT] REMOVE STUDENT FROM COURSE SUCCESS',
-  getSearchCourse: '[COURSE] SEARCH COURSES SUCCESS'
+  getSearchCourse: '[COURSE] SEARCH COURSES SUCCESS',
+  resetCourses: '[COURSE] RESET ALL COURSES AND SEARCH COURSE'
 };
 
 export const {
@@ -33,14 +34,15 @@ export const {
   getCourseStudents,
   deleteCourse,
   createCourse,
-  getSearchCourse
+  getSearchCourse,
+  resetCourses
 } = actionTypes;
 
 const getters = {
   allCourses: state => state.allCourses,
   allStudents: state => state.allStudents,
   course: state => state.course,
-  searchCourse: state => state.getSearchCourse
+  searchCourse: state => state.searchCourse
 };
 
 const actions = {
@@ -124,8 +126,16 @@ const actions = {
       }
     );
   },
-  async [getSearchCourse]({commit}, payload){
-    commit(getSearchCourse, payload)
+  async [getSearchCourse]({ commit }, payload) {
+    const { courses, searchInput } = payload;
+    const foundCourses = courses.filter(c =>
+      c.title.toLowerCase().includes(searchInput.toLowerCase())
+    );
+
+    commit(getSearchCourse, foundCourses);
+  },
+  async [resetCourses]({ commit }) {
+    commit(resetCourses);
   }
 };
 
@@ -148,8 +158,11 @@ const mutations = {
   [getStudents](state, payload) {
     Object.assign(state, { allStudents: payload });
   },
-  [getSearchCourse](state, payload){
-    Object.assign(state, {searchCourse: payload})
+  [getSearchCourse](state, payload) {
+    Object.assign(state, { searchCourse: payload });
+  },
+  [resetCourses](state) {
+    Object.assign(state, { allCourses: [], searchCourse: null });
   }
 };
 

@@ -13,12 +13,8 @@
 </template>
 
 <script>
-import {
-  AppNavbar,
-  AppFooter,
-  AppSnackBar,
-  AppSidenav
-} from './core/components';
+import { AppNavbar, AppFooter, AppSidenav } from './core/components';
+import { AppSnackBar } from './shared/components';
 
 export default {
   name: 'App',

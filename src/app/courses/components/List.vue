@@ -1,7 +1,21 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12" md="3" v-for="course in searchCourse || allCourses" :key="course._id">
+    <v-row v-if="isFound" align="center" justify="center">
+      <div class="font-weight-bold">
+        <h1 class="my-10">Not Found Course</h1>
+
+        <router-link to="/create-course" class="router-link">
+          <v-btn color="primary" width="250">Create Create</v-btn>
+        </router-link>
+      </div>
+    </v-row>
+    <v-row v-else>
+      <v-col
+        cols="12"
+        md="3"
+        v-for="course in searchCourse || allCourses"
+        :key="course._id"
+      >
         <v-card class="mx-auto" width="400" elevation="20">
           <v-img
             class="white--text align-end"
@@ -57,20 +71,26 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { getCourses, deleteCourse } from '../+store/course-state';
+import { getCourses, deleteCourse, resetCourses } from '../+store/course-state';
 export default {
   name: 'List',
   data() {
     return {};
   },
   computed: {
-    ...mapGetters(['allCourses', 'searchCourse'])
+    ...mapGetters(['allCourses', 'searchCourse']),
+    isFound() {
+      return this.searchCourse !== null && this.searchCourse.length === 0;
+    }
   },
   created() {
     this[getCourses]();
   },
+  destroyed() {
+    this[resetCourses]();
+  },
   methods: {
-    ...mapActions([getCourses, deleteCourse]),
+    ...mapActions([getCourses, deleteCourse, resetCourses]),
     deleteCourse(id) {
       this[deleteCourse](id);
     }
@@ -78,6 +98,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
