@@ -71,9 +71,11 @@
       "json",
       "vue"
     ],
+    "testMatch": ["**/tests/**/*.js?(x)"],
     "transform": {
       ".*\\.(vue)$": "vue-jest"
     },
+    
     "preset": "@vue/cli-plugin-unit-jest"
   }
 }
