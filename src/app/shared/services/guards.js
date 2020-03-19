@@ -7,11 +7,11 @@ export const authGuard = function(to, from, next) {
   next();
 };
 
-export const innerGuard = function(to, from, next) {  
-  if (to.name === 'login' || to.name === 'register') {
-    next('/');
-  } else if (from.name === 'login' || from.name === 'register') {
+export const innerGuard = function(to, from, next) {
+  if (from.name === 'login' || from.name === 'register') {
     next();
+  } else if (to.name === 'login' || to.name === 'register') {
+    next('/');
   }
   next();
 };
