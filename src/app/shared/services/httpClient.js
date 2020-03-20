@@ -1,7 +1,9 @@
 import axios from 'axios';
-import store from '../../app-state';
-import { setSnackbarError } from '../+store/snackbar-state';
+// import store from '../../app-state';
+// import { setSnackbarError } from '../+store/snackbar-state';
 import { cacheAdapterEnhancer } from 'axios-extensions';
+
+import { toastError } from '../../shared/services/toasted';
 
 const baseUrl = 'https://baas.kinvey.com';
 const appKey = 'kid_BkLVMjt4U';
@@ -49,24 +51,29 @@ const loggerInterceptor = config => {
   return config;
 };
 
-// Adding the request interceptors 
+// Adding the request interceptors
 http.interceptors.request.use(authInterceptor);
 http.interceptors.request.use(loggerInterceptor);
 
-// Adding the response interceptors 
+// Adding the response interceptors
 const errorInterceptor = function(error) {
   if (error.response.status === 401) {
-    store.dispatch(setSnackbarError, {
-      message: `${error.response.statusText}: ${error.response.data.description}`
-    });
+    toastError(
+      `${error.response.statusText}: ${error.response.data.description}`
+    );
+    // store.dispatch(setSnackbarError, {
+    //   message: `${error.response.statusText}: ${error.response.data.description}`
+    // });
   } else if (error.response.status === 500) {
-    store.dispatch(setSnackbarError, {
-      message: `${error.response.statusText}: Server Error`
-    });
+    toastError(`${error.response.statusText}: Server Error`);
+    // store.dispatch(setSnackbarError, {
+    //   message: `${error.response.statusText}: Server Error`
+    // });
   } else {
-    store.dispatch(setSnackbarError, {
-      message: `${error.response.statusText}`
-    });
+    toastError(`${error.response.statusText}`);
+    // store.dispatch(setSnackbarError, {
+    //   message: `${error.response.statusText}`
+    // });
   }
 
   return Promise.reject(error);

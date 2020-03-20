@@ -37,13 +37,22 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .app {
   background-image: url('../../public/images/higher-ed.jpg') !important;
   background-size: cover !important;
 }
 .router-link {
   text-decoration: none;
+}
+.toast {
+  font-size: 20px !important;
+  padding: 30px !important;
+  height: 50px !important;
+
+  a {
+    color: white !important;
+  }
 }
 @media (min-width: 1024px) {
   .side-nav {

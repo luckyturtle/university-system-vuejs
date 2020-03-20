@@ -4,7 +4,7 @@ const initialState = {
     message: ''
   }
 };
-const actionTypes = {
+export const actionTypes = {
   setSnackbarSuccess: '[SNACKBAR] SET SNACKBAR SUCCESS',
   setSnackbarError: '[SNACKBAR] SET SNACKBAR ERROR',
   resetSnackbar: '[SNACKBAR] RESET SNACKBAR'
@@ -42,5 +42,6 @@ const mutations = {
 export default {
   mutations,
   actions,
-  state: initialState
+  state: initialState,
+  getters: {}
 };

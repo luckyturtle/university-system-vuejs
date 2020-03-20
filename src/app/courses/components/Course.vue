@@ -183,7 +183,6 @@ export default {
 
   created() {
     this[getStudents]();
-    console.log(this.course.students);
   },
   methods: {
     ...mapActions([getStudents, postStudent, updateStudent, removeStudent]),
