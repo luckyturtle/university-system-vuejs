@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { http, rules } from '../../shared/services';
+import { rules } from '../../shared/services/validators';
 import { loginSuccess } from '../+store/auth-state';
 import { mapActions } from 'vuex';
 
@@ -75,13 +75,11 @@ export default {
   },
   methods: {
     ...mapActions([loginSuccess]),
-    async login() {
-      const { data } = await http.post('login', {
+     login() {
+      this[loginSuccess]({
         username: this.username,
         password: this.password
       });
-
-      this[loginSuccess](data);
       this.$router.push('/');
       // this.$bus.$emit('logged', 'User logged');
     }

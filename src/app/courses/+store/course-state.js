@@ -1,5 +1,7 @@
-import { http, dbStorage } from '../../shared/services';
-import { setSnackbarSuccess } from '../../shared/+store/snackbar-state';
+// import { setSnackbarSuccess } from '../../shared/+store/snackbar-state';
+import { http } from '../../shared/services/httpClient';
+import { dbStorage } from '../../shared/services/firebaseConfig';
+import { toastSuccess } from '../../shared/services/toasted';
 
 const initialState = {
   allCourses: [],
@@ -63,7 +65,7 @@ const actions = {
     const data = Object.assign(course.data[0], { students: students.data });
     commit(getCourse, data);
   },
-  async [deleteCourse]({ commit, dispatch }, payload) {
+  async [deleteCourse]({ commit }, payload) {
     alert('Are you sure you want to delete this course?');
     const { id } = payload;
     const { data: students } = await http.get('students');
@@ -78,38 +80,45 @@ const actions = {
       });
     await http.delete(`courses/${id}`);
     commit(deleteCourse, id);
-    dispatch(setSnackbarSuccess, {
-      message: 'Successfully Deleted'
-    });
+    toastSuccess('Successfully Deleted');
+    // dispatch(setSnackbarSuccess, {
+    //   message: 'Successfully Deleted'
+    // });
   },
   async [getStudents]({ commit }) {
     const { data } = await http.get('students');
     commit(actionTypes.getStudents, data);
   },
-  async [postStudent]({ dispatch }, payload) {
+  async [postStudent](_, payload) {
     const { student } = payload;
     await http.post('students', student);
-    dispatch(setSnackbarSuccess, {
-      message: 'Successfully Created'
-    });
+    toastSuccess('Successfully create student!');
+
+    // dispatch(setSnackbarSuccess, {
+    //   message: 'Successfully Created'
+    // });
   },
-  async [removeStudent]({ dispatch }, payload) {
+  async [removeStudent](_, payload) {
     const { student, course } = payload;
     alert('Are you sure you want to delete this student?');
     student.courses = student.courses.filter(c => c !== course._id);
     await http.put(`students/${student._id}`, student);
-    dispatch(setSnackbarSuccess, {
-      message: 'Successfully Removed'
-    });
+    toastSuccess('Successfully remove student!');
+
+    // dispatch(setSnackbarSuccess, {
+    //   message: 'Successfully Removed'
+    // });
   },
-  async [updateStudent]({ dispatch }, payload) {
+  async [updateStudent](_, payload) {
     const { student } = payload;
     await http.put(`students/${student._id}`, student);
-    dispatch(setSnackbarSuccess, {
-      message: 'Successfully Updated'
-    });
+    toastSuccess('Successfully !');
+
+    // dispatch(setSnackbarSuccess, {
+    //   message: 'Successfully Updated'
+    // });
   },
-  async [createCourse]({ commit, dispatch }, payload) {
+  async [createCourse]({ commit }, payload) {
     const { selectedFile: selectedFile } = payload;
     const task = dbStorage
       .ref()
@@ -126,9 +135,11 @@ const actions = {
         const course = Object.assign(payload, { imageUrl: url });
         const { data } = await http.post('courses', course);
         commit(createCourse, { course: data });
-        dispatch(setSnackbarSuccess, {
-          message: 'Successfully Created'
-        });
+        toastSuccess('Successfully create course!');
+
+        // dispatch(setSnackbarSuccess, {
+        //   message: 'Successfully Created'
+        // });
       }
     );
   },

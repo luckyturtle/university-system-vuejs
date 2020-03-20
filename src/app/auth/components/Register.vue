@@ -1,102 +1,111 @@
 <template>
-      <v-col cols="12" md="12" align="center">
-        <v-card class="pa-6" elevation="20" width="600">
-          <v-card-title class="d-flex justify-center">
-            <h2>Registration</h2>
-          </v-card-title>
-          <v-card-text>
-            <v-form
-              @submit.prevent="register"
-              ref="registerForm"
-              v-model="valid"
+  <v-col cols="12" md="12" align="center">
+    <v-card class="px-2 py-8" elevation="20" width="600">
+      <v-card-title class="d-flex justify-center">
+        <h2>Registration</h2>
+      </v-card-title>
+      <v-card-text>
+        <v-form @submit.prevent="register" ref="registerForm" v-model="valid">
+          <v-container class="d-flex justify-space-between">
+            <v-container class="mr-4">
+              <v-text-field
+                v-model="username"
+                prepend-icon="account_box"
+                :rules="[rules.required('Username'), rules.max(10)]"
+                label="Username"
+                type="text"
+              ></v-text-field>
+              <v-text-field
+                v-model="password"
+                name="password"
+                prepend-icon="lock"
+                :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                :rules="[rules.required('Password'), rules.min(6)]"
+                :type="showPass ? 'text' : 'password'"
+                label="Password"
+                class="input-group--focused"
+                @click:append="showPass = !showPass"
+              ></v-text-field>
+              <v-text-field
+                v-model="rePassword"
+                name="password"
+                prepend-icon="lock"
+                :append-icon="showRepeatPass ? 'mdi-eye' : 'mdi-eye-off'"
+                :rules="[rules.required('Password'), rules.min(6)]"
+                :type="showRepeatPass ? 'text' : 'password'"
+                label="Repeat Password"
+                class="input-group--focused"
+                @click:append="showRepeatPass = !showRepeatPass"
+              ></v-text-field>
+              <v-checkbox
+                v-model="checkbox"
+                :rules="[v => !!v || 'You must agree to continue!']"
+                label="Do you agree?"
+                required
+              ></v-checkbox>
+            </v-container>
+            <v-container>
+              <v-text-field
+                v-model="name"
+                prepend-icon="account_box"
+                :rules="[rules.required('Name')]"
+                label="Name"
+                type="text"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="email"
+                prepend-icon="email"
+                :rules="[rules.required('Email')]"
+                label="E-mail"
+                type="email"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="departmant"
+                prepend-icon="account_balance"
+                :rules="[rules.required('This field')]"
+                label="Department"
+                type="text"
+                required
+              ></v-text-field>
+            </v-container>
+          </v-container>
+          <v-container class="d-flex justify-space-between actions">
+            <v-btn
+              type="submit"
+              :disabled="!valid"
+              color="success"
+              class="mr-4 submit-btn"
+              width="300"
+              >Register</v-btn
             >
-              <v-container class="d-flex justify-space-between">
-                <v-container class="mr-4">
-                  <v-text-field
-                    v-model="username"
-                    prepend-icon="account_box"
-                    :rules="[rules.required('Username'), rules.max(10)]"
-                    label="Username"
-                    type="text"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="password"
-                    name="password"
-                    prepend-icon="lock"
-                    :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required('Password'), rules.min(6)]"
-                    :type="showPass ? 'text' : 'password'"
-                    label="Password"
-                    class="input-group--focused"
-                    @click:append="showPass = !showPass"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="rePassword"
-                    name="password"
-                    prepend-icon="lock"
-                    :append-icon="showRepeatPass ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required('Password'), rules.min(6)]"
-                    :type="showRepeatPass ? 'text' : 'password'"
-                    label="Repeat Password"
-                    class="input-group--focused"
-                    @click:append="showRepeatPass = !showRepeatPass"
-                  ></v-text-field>
-                </v-container>
-                <v-container>
-                  <v-text-field
-                    v-model="name"
-                    prepend-icon="account_box"
-                    :rules="[rules.required('Name')]"
-                    label="Name"
-                    type="text"
-                    required
-                  ></v-text-field>
-
-                  <v-text-field
-                    v-model="email"
-                    prepend-icon="email"
-                    :rules="[rules.required('Email')]"
-                    label="E-mail"
-                    type="email"
-                    required
-                  ></v-text-field>
-                  <v-checkbox
-                    v-model="checkbox"
-                    :rules="[v => !!v || 'You must agree to continue!']"
-                    label="Do you agree?"
-                    required
-                  ></v-checkbox>
-                </v-container>
-              </v-container>
-              <v-container class="d-flex justify-space-between actions">
-                <v-btn
-                  type="submit"
-                  :disabled="!valid"
-                  color="success"
-                  class="mr-4"
-                  width="300"
-                  >Register</v-btn
-                >
-                <v-btn color="error" class="mr-4" @click="reset" width="100"
-                  >Reset</v-btn
-                >
-              </v-container>
-            </v-form>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions class="d-flex justify-center ">
-            <span class="mr-4">
-              Already have an account?
-            </span>
-            <router-link to="/login">Login</router-link>
-          </v-card-actions>
-        </v-card>
-      </v-col>
+            <v-btn
+              color="error"
+              class="mr-4 reset-btn"
+              @click="reset"
+              width="100"
+              >Reset</v-btn
+            >
+          </v-container>
+        </v-form>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions class="d-flex justify-center ">
+        <span class="mr-4">
+          Already have an account?
+        </span>
+        <router-link to="/login">Login</router-link>
+      </v-card-actions>
+    </v-card>
+  </v-col>
 </template>
 
 <script>
-import { http, rules } from '../../shared/services';
-import { setSnackbarSuccess } from '../../shared/+store/snackbar-state';
+import { rules } from '../../shared/services/validators';
+import { registerSuccess } from '../+store/auth-state';
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Register',
   data() {
@@ -110,22 +119,21 @@ export default {
       password: '',
       rePassword: '',
       username: '',
-      email: ''
+      email: '',
+      departmant: ''
     };
   },
   methods: {
-    async register() {
-      const user = {
+    ...mapActions([registerSuccess]),
+    register() {
+      this[registerSuccess]({
         username: this.username,
         password: this.password,
         name: this.name,
-        email: this.email
-      };
-      await http.post('', user);
-      this.$router.push('/login');
-      this.$store.dispatch(setSnackbarSuccess, {
-        message: 'Successful Registration!'
+        email: this.email,
+        departmant: this.departmant
       });
+      this.$router.push('/login');
     },
     reset() {
       this.$refs.registerForm.reset();
@@ -134,4 +142,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+@media (max-width: 1200px) {
+  .submit-btn {
+    width: 200px !important;
+  }
+  .reset-btn {
+    width: 80px !important;
+  }
+}
+</style>

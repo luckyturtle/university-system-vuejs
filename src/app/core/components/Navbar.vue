@@ -80,7 +80,7 @@
 
 <script>
 import { logoutSuccess } from '../../auth/+store/auth-state';
-import { http } from '../../shared/services';
+import { http } from '../../shared/services/httpClient';
 import { mapGetters, mapActions } from 'vuex';
 import { getSearchCourse } from '../../courses/+store/course-state';
 export default {

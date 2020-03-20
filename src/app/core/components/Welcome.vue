@@ -58,10 +58,10 @@
 <script>
 export default {
   name: 'Welcome',
-  data() {
-    return {
-      isAuth: this.$store.getters.isAuth
-    };
+  computed:{
+    isAuth(){
+      return this.$store.getters.isAuth
+    }
   }
 };
 </script>
