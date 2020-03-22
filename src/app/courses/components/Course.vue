@@ -32,73 +32,76 @@
             >
           </template>
           <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <template v-if="formTitle !== 'Edit Student'">
-                    <h3 class="title">
-                      Select student from student list
-                    </h3>
-                    <v-col cols="12" sm="8">
-                      <v-select
-                        :items="allStudents"
-                        v-model="selectedStudent"
-                        item-text="name"
-                        return-object
-                        dense
-                        label="Select student..."
-                      ></v-select>
+            <v-form @submit.prevent="save" ref="saveStudentForm" v-model="valid">
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <template v-if="formTitle !== 'Edit Student'">
+                      <h3 class="title">
+                        Select student from student list
+                      </h3>
+                      <v-col cols="12" sm="8">
+                        <v-select
+                          :items="allStudents"
+                          v-model="selectedStudent"
+                          item-text="name"
+                          return-object
+                          dense
+                          label="Select student..."
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="4">
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          class="add-student mb-2"
+                          :disabled="!selectedStudent"
+                          @click="select"
+                          >Select</v-btn
+                        >
+                      </v-col>
+                    </template>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.name"
+                        label="Name"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="4">
-                      <v-btn
-                        color="blue darken-1"
-                        text
-                        class="add-student mb-2"
-                        @click="select"
-                        >Select</v-btn
-                      >
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.town"
+                        label="Town"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
                     </v-col>
-                  </template>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedStudent.name"
-                      label="Name"
-                      :rules="[rules.required('This field')]"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedStudent.town"
-                      label="Town"
-                      :rules="[rules.required('This field')]"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedStudent.age"
-                      label="Age"
-                      :rules="[rules.required('This field')]"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedStudent.groupe"
-                      label="Groupe"
-                      :rules="[rules.required('This field')]"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="reset">Reset</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-            </v-card-actions>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.age"
+                        label="Age"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.groupe"
+                        label="Groupe"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="reset">Reset</v-btn>
+                <v-btn color="blue darken-1" type="submit" text>Save</v-btn>
+              </v-card-actions>
+            </v-form>
           </v-card>
         </v-dialog>
       </v-toolbar>
@@ -125,6 +128,7 @@ export default {
   data() {
     return {
       rules,
+      valid: true,
       drawer: false,
       group: null,
       loading: false,
@@ -222,7 +226,8 @@ export default {
     },
     reset() {
       this.editedStudent = this.defaultStudent;
-      this.selectedStudent = '';
+      this.$refs.saveStudentForm.reset()
+
     },
     select() {
       this.editedStudent = this.selectedStudent;

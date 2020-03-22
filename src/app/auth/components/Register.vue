@@ -11,6 +11,7 @@
               <v-text-field
                 v-model="username"
                 prepend-icon="account_box"
+                :loading="loading"
                 :rules="[rules.required('Username'), rules.max(10)]"
                 label="Username"
                 type="text"
@@ -19,6 +20,7 @@
                 v-model="password"
                 name="password"
                 prepend-icon="lock"
+                :loading="loading"
                 :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                 :rules="[rules.required('Password'), rules.min(6)]"
                 :type="showPass ? 'text' : 'password'"
@@ -28,10 +30,14 @@
               ></v-text-field>
               <v-text-field
                 v-model="rePassword"
-                name="password"
+                name="rePassword"
                 prepend-icon="lock"
+                :loading="loading"
                 :append-icon="showRepeatPass ? 'mdi-eye' : 'mdi-eye-off'"
-                :rules="[rules.required('Password'), rules.min(6)]"
+                :rules="[
+                  rules.required('Repeat password'),
+                  rules.sameAs(password)
+                ]"
                 :type="showRepeatPass ? 'text' : 'password'"
                 label="Repeat Password"
                 class="input-group--focused"
@@ -48,6 +54,7 @@
               <v-text-field
                 v-model="name"
                 prepend-icon="account_box"
+                :loading="loading"
                 :rules="[rules.required('Name')]"
                 label="Name"
                 type="text"
@@ -56,6 +63,7 @@
               <v-text-field
                 v-model="email"
                 prepend-icon="email"
+                :loading="loading"
                 :rules="[rules.required('Email')]"
                 label="E-mail"
                 type="email"
@@ -64,7 +72,8 @@
               <v-text-field
                 v-model="departmant"
                 prepend-icon="account_balance"
-                :rules="[rules.required('This field')]"
+                :loading="loading"
+                :rules="[rules.required()]"
                 label="Department"
                 type="text"
                 required
@@ -74,6 +83,7 @@
           <v-container class="d-flex justify-space-between actions">
             <v-btn
               type="submit"
+              :loading="loading"
               :disabled="!valid"
               color="success"
               class="mr-4 submit-btn"
@@ -83,6 +93,7 @@
             <v-btn
               color="error"
               class="mr-4 reset-btn"
+              type="button"
               @click="reset"
               width="100"
               >Reset</v-btn
@@ -111,6 +122,7 @@ export default {
   data() {
     return {
       rules,
+      loading: false,
       valid: true,
       checkbox: false,
       showRepeatPass: false,
@@ -125,15 +137,17 @@ export default {
   },
   methods: {
     ...mapActions([registerSuccess]),
-    register() {
-      this[registerSuccess]({
-        username: this.username,
-        password: this.password,
-        name: this.name,
-        email: this.email,
-        departmant: this.departmant
-      });
-      this.$router.push('/login');
+    async register() {
+      this.loading = true;
+        await this[registerSuccess]({
+          username: this.username,
+          password: this.password,
+          name: this.name,
+          email: this.email,
+          departmant: this.departmant
+        });
+        this.loading = false;
+        this.$router.push('/login');
     },
     reset() {
       this.$refs.registerForm.reset();
