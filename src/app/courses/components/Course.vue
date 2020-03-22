@@ -3,149 +3,179 @@
     :headers="headers"
     :items="students"
     sort-by="name"
-    class="elevation-1"
+    height="300"
     :items-per-page="5"
     :loading="loading"
   >
     <template v-slot:top>
-      <v-toolbar flat color="white">
-        <v-avatar class="mr-4">
-          <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+      <v-toolbar flat color="white" height="150">
+        <v-avatar class="mr-6">
+          <v-img
+            aspect-ratio="1"
+            class="grey lighten-2 white--text align-end"
+            :src="course.imageUrl"
+          ></v-img>
         </v-avatar>
-        <h3 class="title mr-4">
-          <span>Course:</span>
-          {{course.title}}
-        </h3>
-        <h3 class="title mr-4">
-          <span>Duration:</span>
-          {{course.duration}} weeks
-        </h3>
-        <h3 class="title mr-4">
-          <span>Start:</span>
-          {{course.startDate}}
-        </h3>
+        <div class="d-flex">
+          <span class="blue--text darken-2 mr-2">Course:</span>
+          <p class="mr-6">{{ course.title }}</p>
+          <span class="blue--text darken-2 mr-2">Duration:</span>
+          <p class="mr-6">{{ course.duration }} weeks</p>
+          <span class="blue--text darken-2 mr-2">Start:</span>
+          <p class="mr-6">{{ course.startDate }}</p>
+        </div>
         <v-spacer></v-spacer>
-
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">Add Student</v-btn>
+            <v-btn color="primary" dark class="mb-2 add-btn" v-on="on"
+              >Add Student</v-btn
+            >
           </template>
           <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <template v-if="!isEditForm">
-                    <h3 class="title">Select student from student list</h3>
-                    <v-col cols="12" sm="8">
-                      <v-select
-                        :items="studentList"
-                        v-model="selectedStudent"
-                        dense
-                        label="Select student..."
-                      ></v-select>
+            <v-form @submit.prevent="save" ref="saveStudentForm" v-model="valid">
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <template v-if="formTitle !== 'Edit Student'">
+                      <h3 class="title">
+                        Select student from student list
+                      </h3>
+                      <v-col cols="12" sm="8">
+                        <v-select
+                          :items="allStudents"
+                          v-model="selectedStudent"
+                          item-text="name"
+                          return-object
+                          dense
+                          label="Select student..."
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="4">
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          class="add-student mb-2"
+                          :disabled="!selectedStudent"
+                          @click="select"
+                          >Select</v-btn
+                        >
+                      </v-col>
+                    </template>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.name"
+                        label="Name"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="4">
-                      <v-btn
-                        color="blue darken-1"
-                        text
-                        class="add-student mb-2"
-                        @click="select"
-                      >Select</v-btn>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.town"
+                        label="Town"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
                     </v-col>
-                  </template>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.town" label="Town"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.age" label="Age"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.groupe" label="Groupe"></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="reset">Reset</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-            </v-card-actions>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.age"
+                        label="Age"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedStudent.groupe"
+                        label="Groupe"
+                        :rules="[rules.required()]"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="reset">Reset</v-btn>
+                <v-btn color="blue darken-1" type="submit" text>Save</v-btn>
+              </v-card-actions>
+            </v-form>
           </v-card>
         </v-dialog>
       </v-toolbar>
     </template>
-
     <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+      <v-icon small class="mr-2" @click="editStudent(item)">mdi-pencil</v-icon>
+      <v-icon small @click="deleteStudent(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { http } from "../../shared/services";
+import { mapGetters, mapActions } from 'vuex';
+import { rules } from '../../shared/services/validators';
+import {
+  getStudents,
+  postStudent,
+  updateStudent,
+  removeStudent
+} from '../+store/course-state';
 
 export default {
-  name: "Course",
+  name: 'Course',
   data() {
     return {
-      loading: true,
-      dialog: false,
+      rules,
+      valid: true,
+      drawer: false,
+      group: null,
+      loading: false,
       headers: [
         {
-          text: "Full name",
-          align: "start",
-          value: "name"
+          text: 'Full name',
+          align: 'start',
+          value: 'name'
         },
-        { text: "Town", value: "town" },
-        { text: "Age", value: "age" },
-        { text: "Groupe", value: "groupe" },
-        { text: "Actions", value: "action", sortable: false }
+        { text: 'Town', value: 'town' },
+        { text: 'Age', value: 'age' },
+        { text: 'Groupe', value: 'groupe' },
+        { text: 'Actions', value: 'action', sortable: false }
       ],
-      selectedStudent: null,
-      allStudents: [],
-      students: [],
+      dialog: false,
       editedIndex: -1,
-      editedItem: {
-        name: "",
-        town: "",
-        age: "",
-        groupe: "",
+      students: this.course.students,
+      editedStudent: {
+        name: '',
+        town: '',
+        age: '',
+        groupe: '',
         courses: []
       },
-      defaultItem: {
-        name: "",
-        town: "",
-        age: "",
-        groupe: ""
+      selectedStudent: null,
+      defaultStudent: {
+        name: '',
+        town: '',
+        age: '',
+        groupe: '',
+        courses: []
       }
     };
   },
 
   props: {
-    course: {}
+    course: {
+      type: Object,
+      required: true
+    }
   },
+
   computed: {
+    ...mapGetters(['allStudents', 'getStudentInfo']),
+
     formTitle() {
-      return this.editedIndex === -1 ? "Add Student" : "Edit Student";
-    },
-    studentList() {
-      return this.allStudents.map(s => s.name);
-    },
-    isEditForm() {
-      return this.formTitle === "Edit Student";
+      return this.editedIndex === -1 ? 'Add Student' : 'Edit Student';
     }
   },
 
@@ -156,92 +186,70 @@ export default {
   },
 
   created() {
-    http
-      .get(`students/?query={"courses":"${this.course._id}"}`)
-      .then(({ data }) => {
-        this.students = data;
-        this.loading = false;
-      });
-    http
-      .get("students")
-      .then(students => {
-        this.allStudents = students.data;
-      })
-      .catch(err => console.error(err));
+    this[getStudents]();
   },
-
   methods: {
-    editItem(student) {
-      this.editedIndex = this.students.indexOf(student);
-      this.editedItem = Object.assign({}, student);
+    ...mapActions([getStudents, postStudent, updateStudent, removeStudent]),
+
+    editStudent(student) {
       this.dialog = true;
+      this.editedIndex = this.students.indexOf(student);
+      this.editedStudent = Object.assign({}, student);
     },
 
-    deleteItem(student) {
-      http
-        .delete(`students/${student._id}`)
-        .then(() => {
-          console.log("Deleted!");
-        })
-        .catch(err => console.error(err));
-      const index = this.students.indexOf(student);
-      confirm("Are you sure you want to delete this item?") &&
-        this.students.splice(index, 1);
+    deleteStudent(student) {
+      this[removeStudent]({ student, course: this.course });
+      this.students = this.students.filter(s => s !== student);
     },
 
     close() {
       this.dialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedStudent = Object.assign({}, this.defaultStudent);
         this.editedIndex = -1;
       }, 300);
     },
-
     save() {
       if (this.editedIndex > -1) {
-        http
-          .put(`students/${this.editedItem._id}`, this.editedItem)
-          .then(() => {})
-          .catch(err => console.error(err));
-        Object.assign(this.students[this.editedIndex], this.editedItem);
+        this[updateStudent]({ student: this.editedStudent });
+
+        Object.assign(this.students[this.editedIndex], this.editedStudent);
       } else {
-        this.editedItem.courses.push(this.course._id);
-        http
-          .post("students", this.editedItem)
-          .then(() => {})
-          .catch(err => console.error(err));
-        this.students.push(this.editedItem);
+        const action = this.selectedStudent ? updateStudent : postStudent;
+        this.editedStudent.courses = this.editedStudent.courses.concat(
+          this.course._id
+        );
+        this.students = this.students.concat(this.editedStudent);
+        this[action]({ student: this.editedStudent });
       }
       this.close();
     },
     reset() {
-      this.editedItem.name = "";
-      this.editedItem.town = "";
-      this.editedItem.age = "";
-      this.editedItem.groupe = "";
-      this.selectedStudent = "";
+      this.editedStudent = this.defaultStudent;
+      this.$refs.saveStudentForm.reset()
+
     },
     select() {
-      http
-        .get(`students/?query={"name":"${this.selectedStudent}"}`)
-        .then(({ data }) => {
-          const { name, town, age, groupe } = data[0];
-          this.editedItem.name = name;
-          this.editedItem.town = town;
-          this.editedItem.groupe = groupe;
-          this.editedItem.age = age;
-        });
+      this.editedStudent = this.selectedStudent;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.title span {
+span {
+  font-weight: bold;
   color: #3d88d2;
 }
-
-.add-student {
-  margin-left: 20px;
+@media (max-width: 1200px) {
+  .toolbar-title {
+    font-size: 16px;
+  }
+  div.col-md-3.col-12 {
+    padding: 0px;
+  }
+  .add-btn {
+    width: 50px;
+  }
 }
 </style>

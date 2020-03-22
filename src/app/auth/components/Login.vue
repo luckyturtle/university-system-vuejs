@@ -1,114 +1,101 @@
 <template>
-  <div class="wrraper">
-    <v-row align="center" class="card">
-      <h2>Login</h2>
-      <v-form @submit.prevent="login" v-model="valid" ref="loginForm">
-        <v-text-field v-model="username" :rules="usernameRules" label="Username"></v-text-field>
-        <v-text-field
-          v-model="password"
-          name="password"
-          :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="[passwordRulse.required, passwordRulse.min]"
-          :type="show ? 'text' : 'password'"
-          label="Password"
-          value
-          class="input-group--focused"
-          @click:append="show = !show"
-        ></v-text-field>
+  <v-col cols="12" md="12" align="center">
+    <v-card class="pa-8" elevation="20" width="600">
+      <v-card-title class="d-flex justify-center">
+        <h2>
+          Login
+        </h2>
+      </v-card-title>
+      <v-card-text>
+        <v-form @submit.prevent="login" v-model="valid" ref="loginForm">
+          <v-text-field
+            prepend-icon="account_box"
+            v-model="username"
+            :loading="loading"
+            :rules="[rules.required('Username'), rules.max(10)]"
+            label="Username"
+          ></v-text-field>
+          <v-text-field
+            prepend-icon="lock"
+            v-model="password"
+            name="password"
+            :loading="loading"
+            :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+            :rules="[rules.required('Password'), rules.min(6)]"
+            :type="show ? 'text' : 'password'"
+            label="Password"
+            value
+            class="input-group--focused"
+            @click:append="show = !show"
+          ></v-text-field>
 
-        <v-checkbox
-          v-model="checkbox"
-          :rules="[v => !!v || 'You must agree to continue!']"
-          label="Do you agree?"
-          required
-        ></v-checkbox>
-        <v-container class="actions">
-          <v-btn type="submit" :disabled="!valid" color="success" class="mr-4" width="300">Login</v-btn>
-        </v-container>
-        <v-divider></v-divider>
-      </v-form>
-      <p class="text">
-        Don't have an account?
+          <v-checkbox
+            v-model="checkbox"
+            :rules="[v => !!v || 'You must agree to continue!']"
+            label="Do you agree?"
+            required
+          ></v-checkbox>
+          <v-container class="actions">
+            <v-btn
+              type="submit"
+              :loading="loading"
+              :disabled="!valid"
+              color="success"
+              class="mr-4"
+              width="200"
+              >Login</v-btn
+            >
+          </v-container>
+        </v-form>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions class="d-flex justify-center ">
+        <span class="mr-4">
+          Don't have an account?
+        </span>
         <router-link to="/register">Register</router-link>
-      </p>
-    </v-row>
-  </div>
+      </v-card-actions>
+    </v-card>
+  </v-col>
 </template>
 
 <script>
-import { http } from "../../shared/services";
-import { actionTypes as snackbarActionTypes } from "../../shared/shared-state";
-import { actionTypes as userActionTypes } from "../../auth/auth-state";
+import { rules } from '../../shared/services/validators';
+import { loginSuccess } from '../+store/auth-state';
+import { mapActions } from 'vuex';
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
+      loading: false,
+      rules,
       valid: true,
       show: false,
       checkbox: false,
-
-      username: "",
-      usernameRules: [
-        v => !!v || "Username is required",
-        v => (v && v.length <= 10) || "Username must be less than 10 characters"
-      ],
-      password: "",
-      passwordRulse: {
-        required: v => !!v || "Password is required.",
-        min: v => v.length >= 6 || "Min 6 characters"
-      }
+      username: '',
+      password: ''
     };
   },
   methods: {
-    login() {
-      http
-        .post("login", {
+    ...mapActions([loginSuccess]),
+    async login() {
+      try {
+        this.loading = true;
+        await this[loginSuccess]({
           username: this.username,
           password: this.password
-        })
-        .then(({ data }) => {
-          localStorage.setItem("authtoken", data._kmd.authtoken);
-          this.$store.dispatch(userActionTypes.loginSuccess, {
-            userInfo: data,
-            authtoken: data._kmd.authtoken,
-            isAuth: true
-          });
-          this.$bus.$emit("logged", "User logged");
-          this.$router.push("/");
-          this.$store.dispatch(snackbarActionTypes.setSnackbarSuccess, {
-            message: "Success Login"
-          });
         });
+        this.loading = false;
+        this.$router.push('/');
+      } catch (err) {
+        this.loading = false;
+        this.$refs.loginForm.reset();
+      }
+      // this.$bus.$emit('logged', 'User logged');
     }
   }
 };
 </script>
 
-<style scoped>
-.actions {
-  margin-bottom: 15px;
-}
-.text {
-  margin-top: 15px;
-}
-.wrraper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 600px;
-  border-radius: 0.5em;
-  box-shadow: 0 0 1em gray;
-  padding: 40px 50px;
-  margin-top: 20px;
-  background: rgba(255, 255, 255, 0.95);
-}
-h2 {
-  margin-bottom: 40px;
-}
-</style>
+<style scoped></style>
