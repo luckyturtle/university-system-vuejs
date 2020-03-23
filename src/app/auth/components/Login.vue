@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { rules } from '../../shared/services/validators';
+import { rules } from '../../utils/validators';
 import { loginSuccess } from '../+store/auth-state';
 import { mapActions } from 'vuex';
 

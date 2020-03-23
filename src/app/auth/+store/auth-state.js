@@ -1,5 +1,5 @@
-import { toastSuccess } from '../../shared/services/toasted';
-import { http } from '../../shared/services/httpClient';
+import { toastSuccess } from '../../utils/toasted';
+import { http } from '../../services/httpClient';
 
 const initialState = {
   isAuth: localStorage.getItem('authtoken') !== null,

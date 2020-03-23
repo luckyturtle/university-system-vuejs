@@ -1,5 +1,5 @@
 
-import { authGuard } from '../shared/services/guards';
+import { authGuard } from '../utils/guards';
 
 export default [
   { path: '', redirect: { name: 'course-list' } },

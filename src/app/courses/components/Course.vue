@@ -115,7 +115,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { rules } from '../../shared/services/validators';
+import { rules } from '../../utils/validators';
 import {
   getStudents,
   postStudent,

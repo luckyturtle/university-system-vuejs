@@ -1,7 +1,7 @@
 // import { setSnackbarSuccess } from '../../shared/+store/snackbar-state';
-import { http } from '../../shared/services/httpClient';
-import { dbStorage } from '../../shared/services/firebaseConfig';
-import { toastSuccess } from '../../shared/services/toasted';
+import { http } from '../../services/httpClient';
+import { dbStorage } from '../../utils/firebaseConfig';
+import { toastSuccess } from '../../utils/toasted';
 
 const initialState = {
   allCourses: [],

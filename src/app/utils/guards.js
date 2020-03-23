@@ -1,4 +1,4 @@
-import store from '../../app-state';
+import store from '../app-state';
 
 export const authGuard = function(to, from, next) {
   if (!store.getters.isAuth) {

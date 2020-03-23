@@ -3,11 +3,11 @@ import axios from 'axios';
 // import { setSnackbarError } from '../+store/snackbar-state';
 import { cacheAdapterEnhancer } from 'axios-extensions';
 
-import { toastError } from '../../shared/services/toasted';
+import { toastError } from '../utils/toasted';
 
 const baseUrl = 'https://baas.kinvey.com';
-const appKey = 'kid_BkLVMjt4U';
-const appSecret = 'e3622f177f85429b86921b036f43a8a4';
+const appKey = 'kid_r1iJRsULU';
+const appSecret = 'edc60c8e88534c27bba5af3824f3e919';
 
 const cacheConfig = {
   enabledByDefault: false,

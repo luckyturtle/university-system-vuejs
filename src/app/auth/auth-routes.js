@@ -1,6 +1,6 @@
 import AppLogin from './components/Login';
 import AppRegister from './components/Register';
-import { innerGuard } from '../shared/services/guards';
+import { innerGuard } from '../utils/guards';
 
 export default [
   {
