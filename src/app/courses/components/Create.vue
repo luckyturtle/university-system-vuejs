@@ -7,7 +7,7 @@
             <h2>Create Course</h2>
           </v-col>
           <v-row>
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="6" >
               <v-text-field
                 v-model="title"
                 :rules="[rules.required('Title')]"
@@ -29,7 +29,7 @@
                 ref="file"
               ></v-file-input>
             </v-col>
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="6" class="test">
               <v-menu
                 ref="startMenu"
                 v-model="startMenu"
@@ -82,9 +82,9 @@
               <v-container class="actions">
                 <v-btn
                   type="submit"
-                  :disabled="!valid"
+               
                   color="success"
-                  class="mr-4"
+                  class="mr-4 btn-submit"
                   width="200"
                   >Create</v-btn
                 >

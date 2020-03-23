@@ -59,14 +59,14 @@
           </v-card-text>
           <v-card-actions>
             <router-link
-              class="router-link"
+              class="router-link btn-detail"
               :to="{ path: `courses/${course._id}` }"
             >
               <v-btn color="primary" class="mr-4">View</v-btn>
             </router-link>
             <v-btn
               color="error"
-              class="mr-4"
+              class="mr-4 btn-delete"
               @click="deleteCourse({ id: course._id })"
               >Delete</v-btn
             >

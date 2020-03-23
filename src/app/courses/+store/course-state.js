@@ -12,7 +12,7 @@ const initialState = {
   searchCourse: null
 };
 
-const actionTypes = {
+export const actionTypes = {
   getCourses: '[COURSE] GET ALL COURSES SUCCESS',
   getCourse: '[COURSE] GET SINGLE COURSE SUCCESS',
   deleteCourse: '[COURSE] DELETE COURSE SUCCESS',
