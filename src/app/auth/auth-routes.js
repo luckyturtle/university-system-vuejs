@@ -11,15 +11,14 @@ export default [
       {
         path: 'login',
         name: 'login',
-        component: AppLogin,
-        beforeEnter: innerGuard
+        component: AppLogin
       },
       {
         path: 'register',
         name: 'register',
-        component: AppRegister,
-        beforeEnter: innerGuard
+        component: AppRegister
       }
-    ]
+    ],
+    beforeEnter: innerGuard
   }
 ];

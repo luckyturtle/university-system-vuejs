@@ -1,4 +1,4 @@
-import { authGuard } from '../utils/guards';
+// import { authGuard } from '../utils/guards';
 import AppCourse from './Course.vue';
 export default [
   {
@@ -15,8 +15,7 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "course-list" */ '../courses/components/List.vue'
-          ),
-        beforeEnter: authGuard
+          )
       },
       {
         path: 'create',
@@ -24,8 +23,7 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "course-create" */ '../courses/components/Create.vue'
-          ),
-        beforeEnter: authGuard
+          )
       },
       {
         path: ':id',
@@ -34,9 +32,10 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "course-detail" */ '../courses/components/Detail.vue'
-          ),
-        beforeEnter: authGuard
+          )
       }
-    ]
+    ],
+    // beforeEnter: authGuard,
+    meta: { auth: true }
   }
 ];

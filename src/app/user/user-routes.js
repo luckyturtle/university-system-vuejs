@@ -1,4 +1,3 @@
-import { authGuard } from '../utils/guards';
 import AppUser from './User.vue';
 export default [
   {
@@ -15,9 +14,9 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "course-list" */ '../user/components/Profile.vue'
-          ),
-        beforeEnter: authGuard
+          )
       }
-    ]
+    ],
+    meta: { auth: true }
   }
 ];
