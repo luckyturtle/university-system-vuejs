@@ -53,7 +53,7 @@
         <span class="mr-4">
           Don't have an account?
         </span>
-        <router-link to="/register">Register</router-link>
+        <router-link :to="{path: '/auth/register'}">Register</router-link>
       </v-card-actions>
     </v-card>
   </v-col>

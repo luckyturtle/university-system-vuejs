@@ -179,7 +179,7 @@ const mutations = {
     Object.assign(state, { searchCourse: payload });
   },
   [resetCourses](state) {
-    Object.assign(state, { allCourses: [], searchCourse: null });
+    Object.assign(state, {  searchCourse: null });
   }
 };
 

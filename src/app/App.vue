@@ -8,7 +8,7 @@
       <app-sidenav :drawer="drawer" @onDrawer="drawer = $event"></app-sidenav>
       <v-container>
         <v-row align="center" justify="center">
-          <router-view />
+          <router-view  />
         </v-row>
       </v-container>
     </v-content>

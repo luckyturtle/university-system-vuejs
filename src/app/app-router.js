@@ -3,20 +3,14 @@ import VueRouter from 'vue-router';
 import { authRoutes } from './auth';
 import { courseRoutes } from './courses';
 import { AppWelcome, AppNotFound } from './core/components';
-import { AppProfile } from './user/components';
-
+import { userRoutes } from './user';
 Vue.use(VueRouter);
 
 const appRoutes = [
   {
     path: '/',
-    name: 'welcome',
+    name: 'home',
     component: AppWelcome
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: AppProfile
   },
   {
     path: '*',
@@ -25,7 +19,7 @@ const appRoutes = [
   }
 ];
 
-const routes = [...appRoutes, ...authRoutes, ...courseRoutes];
+const routes = [...appRoutes, ...authRoutes, ...courseRoutes, ...userRoutes];
 
 export default new VueRouter({
   mode: 'history',

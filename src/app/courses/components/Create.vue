@@ -7,7 +7,7 @@
             <h2>Create Course</h2>
           </v-col>
           <v-row>
-            <v-col cols="12" md="6" >
+            <v-col cols="12" md="6">
               <v-text-field
                 v-model="title"
                 :rules="[rules.required('Title')]"
@@ -82,7 +82,7 @@
               <v-container class="actions">
                 <v-btn
                   type="submit"
-               
+                  :disabled="!valid"
                   color="success"
                   class="mr-4 btn-submit"
                   width="200"

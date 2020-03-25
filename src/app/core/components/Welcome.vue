@@ -26,12 +26,12 @@
         <h2 class="headline font-weight-bold mb-3">
           Check courses or create new course
         </h2>
-        <router-link to="/courses" class="router-link">
+        <router-link :to="{path: '/course/list'}" class="router-link">
           <v-btn color="primary" class="mr-4 mb-4" width="300"
             >All Courses</v-btn
           >
         </router-link>
-        <router-link to="/create-course" class="router-link">
+        <router-link :to="{ path: '/course/create' }" class="router-link">
           <v-btn color="primary" class="mr-4 mb-4" width="300"
             >Create Create</v-btn
           >
@@ -41,13 +41,13 @@
         <h2 class="headline font-weight-bold mb-3">
           Join to out university system
         </h2>
-        <router-link to="/login" class="router-link">
+        <router-link :to="{ path: '/auth/login'}" class="router-link">
           <v-btn color="primary" class="mr-4 mb-4" width="300"
             >Login</v-btn
           ></router-link
         >
 
-        <router-link to="/register" class="router-link">
+        <router-link :to="{ path: '/auth/register' }" class="router-link">
           <v-btn color="primary" class="mr-4 mb-4" width="300">Register</v-btn>
         </router-link>
       </v-col>

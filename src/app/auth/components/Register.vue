@@ -106,7 +106,7 @@
         <span class="mr-4">
           Already have an account?
         </span>
-        <router-link to="/login">Login</router-link>
+        <router-link :to="{path: '/auth/login'}">Login</router-link>
       </v-card-actions>
     </v-card>
   </v-col>
