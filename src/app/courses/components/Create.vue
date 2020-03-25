@@ -128,7 +128,7 @@ export default {
         imageUrl: null,
         students: []
       });
-      this.$router.push('/courses');
+      this.$router.push('/course/list');
     }
   }
 };

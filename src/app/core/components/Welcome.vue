@@ -1,16 +1,21 @@
 <template>
   <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
+    <v-col class="text-center">
+      <v-row rows="12" md="12">
         <v-img
           src="images/university-logo.png"
           class="my-3"
           contain
           height="200"
         />
-      </v-col>
-
-      <v-col class="mb-4">
+      </v-row>
+      <v-row
+        rows="12"
+        md="12"
+        class="mb-4 d-flex flex-column"
+        align="center"
+        justify="center"
+      >
         <h1 class="display-2 font-weight-bold mb-3">
           Welcome to
           <br />University System
@@ -20,28 +25,31 @@
           In this system, you can start to create course then
           <br />add new student to it
         </p>
-      </v-col>
+      </v-row>
 
-      <v-col class="mb-5" cols="12" v-if="isAuth">
+      <v-row class="mb-5 d-flex flex-column" rows="12" md="12" v-if="isAuth">
         <h2 class="headline font-weight-bold mb-3">
           Check courses or create new course
         </h2>
-        <router-link :to="{path: '/course/list'}" class="router-link">
-          <v-btn color="primary" class="mr-4 mb-4" width="300"
-            >All Courses</v-btn
-          >
-        </router-link>
-        <router-link :to="{ path: '/course/create' }" class="router-link">
-          <v-btn color="primary" class="mr-4 mb-4" width="300"
-            >Create Create</v-btn
-          >
-        </router-link>
-      </v-col>
-      <v-col class="mb-5" cols="12" v-else>
+        <div>
+          <router-link :to="{ path: '/course/list' }" class="router-link">
+            <v-btn color="primary" class="mr-4 mb-4" width="300"
+              >All Courses</v-btn
+            >
+          </router-link>
+          <router-link :to="{ path: '/course/create' }" class="router-link">
+            <v-btn color="primary" class="mr-4 mb-4" width="300"
+              >Create Create</v-btn
+            >
+          </router-link>
+        </div>
+      </v-row>
+      <v-row class="mb-5 d-flex flex-column" rows="12" v-else>
         <h2 class="headline font-weight-bold mb-3">
           Join to out university system
         </h2>
-        <router-link :to="{ path: '/auth/login'}" class="router-link">
+        <div>
+        <router-link :to="{ path: '/auth/login' }" class="router-link">
           <v-btn color="primary" class="mr-4 mb-4" width="300"
             >Login</v-btn
           ></router-link
@@ -50,17 +58,19 @@
         <router-link :to="{ path: '/auth/register' }" class="router-link">
           <v-btn color="primary" class="mr-4 mb-4" width="300">Register</v-btn>
         </router-link>
-      </v-col>
-    </v-row>
+        </div>
+
+      </v-row>
+    </v-col>
   </v-container>
 </template>
 
 <script>
 export default {
   name: 'Welcome',
-  computed:{
-    isAuth(){
-      return this.$store.getters.isAuth
+  computed: {
+    isAuth() {
+      return this.$store.getters.isAuth;
     }
   }
 };
