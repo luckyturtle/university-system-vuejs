@@ -1,5 +1,6 @@
 <template>
-  <v-row>
+  <app-loader v-if="loading"></app-loader>
+  <v-row v-else>
     <v-col cols="12" md="3" v-if="isFound">
       <div class="font-weight-bold" align="center" justify="center">
         <h1 class="my-10">Not Found Course</h1>
@@ -79,12 +80,18 @@
 </template>
 
 <script>
+import AppLoader from '@/app/shared/components/Loader.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { getCourses, deleteCourse, resetCourses } from '../+store/course-state';
 export default {
   name: 'List',
+  components: {
+    AppLoader
+  },
   data() {
-    return {};
+    return {
+      loading: false
+    };
   },
   computed: {
     ...mapGetters(['allCourses', 'searchCourse']),
@@ -93,7 +100,8 @@ export default {
     }
   },
   created() {
-    this[getCourses]();
+    this.loading = true;
+    this[getCourses]().then(() => (this.loading = false));
   },
   destroyed() {
     this[resetCourses]();

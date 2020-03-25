@@ -1,5 +1,7 @@
 <template>
-  <v-col cols="12" md="8">
+  <app-loader v-if="loading"> </app-loader>
+
+  <v-col cols="12" md="8" v-else>
     <v-card flat tile>
       <v-window v-model="onboarding" reverse>
         <v-window-item v-for="course in list" :key="`card-${course._id}`">
@@ -17,7 +19,6 @@
             v-slot:default="{ active, toggle }"
           >
             <v-btn
-              :loading="loading"
               :input-value="active"
               icon
               @click="toggle"
@@ -32,19 +33,18 @@
       </v-card-actions>
     </v-card>
   </v-col>
-  <!-- <app-loader v-else /> -->
 </template>
 
 <script>
 import AppTable from './Table.vue';
-// import { AppLoader } from '../../shared/components';
+import { AppLoader } from '../../shared/components';
 import { mapGetters, mapActions } from 'vuex';
 import { getCourse, getCourses } from '../+store/course-state';
 export default {
   name: 'Detail',
   components: {
-    AppTable
-    // AppLoader
+    AppTable,
+    AppLoader
   },
   data() {
     return {
