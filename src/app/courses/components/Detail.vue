@@ -9,7 +9,7 @@
         </v-window-item>
       </v-window>
       <v-card-actions class="justify-space-between">
-        <v-btn :loading="loading" text @click="prev">
+        <v-btn  class="btn-prev" :loading="loading" text @click.native="prev">
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
         <v-item-group v-model="onboarding" class="text-center" mandatory>
@@ -27,7 +27,7 @@
             </v-btn>
           </v-item>
         </v-item-group>
-        <v-btn :loading="loading" text @click="next">
+        <v-btn class="btn-next" :loading="loading" text @click.native="next">
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-card-actions>

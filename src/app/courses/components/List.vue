@@ -35,7 +35,7 @@
         </v-img>
 
         <v-card-title class="font-weight-bold blue--text darken-2">
-          <div>{{ course.title }}</div>
+          <div class="title">{{ course.title }}</div>
         </v-card-title>
 
         <v-card-subtitle
@@ -65,16 +65,17 @@
             class="router-link btn-detail"
             :to="{ name: 'course-detail', params: { id: course._id } }"
           >
-            <v-btn color="primary" class="mr-4">View</v-btn>
+            <v-btn color="primary" class="mr-4 ">View</v-btn>
           </router-link>
           <v-btn
             color="error"
             class="mr-4 btn-delete"
-            @click="deleteCourse({ id: course._id })"
+            @click.native="deleteCourse({ id: course._id })"
             >Delete</v-btn
           >
         </v-card-actions>
       </v-card>
+     
     </v-col>
   </v-row>
 </template>

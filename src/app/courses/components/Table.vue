@@ -172,7 +172,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['allStudents', 'getStudentInfo']),
+    ...mapGetters(['allStudents']),
 
     formTitle() {
       return this.editedIndex === -1 ? 'Add Student' : 'Edit Student';

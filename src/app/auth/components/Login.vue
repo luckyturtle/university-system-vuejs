@@ -7,7 +7,7 @@
         </h2>
       </v-card-title>
       <v-card-text>
-        <v-form @submit.prevent="login" v-model="valid" ref="loginForm">
+        <v-form @submit.native="login" v-model="valid" ref="loginForm">
           <v-text-field
             prepend-icon="account_box"
             v-model="username"
@@ -79,7 +79,8 @@ export default {
   },
   methods: {
     ...mapActions([loginSuccess]),
-    async login() {
+    async login(ev) {
+      ev.preventDefault()
       try {
         this.loading = true;
         await this[loginSuccess]({

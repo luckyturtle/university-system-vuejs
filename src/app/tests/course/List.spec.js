@@ -8,35 +8,42 @@ import {
   getCourses,
   deleteCourse
 } from '../../courses/+store/course-state';
-import { AppList } from '../../courses/components';
-import { testAction, asyncCallback } from '../../util/unit-test';
+import AppList from '../../courses/components/List.vue';
+import { testAction, asyncCallback } from '../../utils/unit-test';
 
 Vue.use(Vuetify);
-Vue.use(VueRouter);
 
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
+localVue.use(VueRouter);
 
-describe('AppCreate.vue', () => {
-  let actions;
-  let state;
+describe('Testing AppList.vue', () => {
   let store;
-  let vuetify;
-  let router;
-  let wrapper;
+  let state;
+  let actions;
   let mutations;
+  let router;
+  let vuetify;
+  let wrapper;
+  let options;
 
   beforeEach(() => {
     vuetify = new Vuetify();
     router = new VueRouter();
-
     state = {
-      allCourses: [],
-      allStudents: [],
-      course: {
-        _id: null
-      },
+      allCourses: [
+        {
+          _id: '2d6144c4ca822500155df3b9',
+          title: 'Typescript',
+          duration: '4',
+          startDate: '2020-03-29',
+          students: [],
+          description: 'Test test',
+          available: true,
+          imageUrl: 'https://test.test'
+        }
+      ],
       searchCourse: [
         {
           _id: '2d6144c4ca822500155df3b9',
@@ -84,64 +91,64 @@ describe('AppCreate.vue', () => {
       }
     });
 
-    wrapper = shallowMount(AppList, {
+    options = {
       store,
-      localVue,
-      vuetify,
       router,
-      mocks: {
-        course: {
-          _id: '5e6144c4ca822500151256t3',
-          title: 'Javascript',
-          duration: '4',
-          startDate: '2020-04-29',
-          students: [],
-          description: 'Demo demo',
-          available: true,
-          imageUrl: 'https://demo.test'
-        }
-      }
-    });
+      localVue,
+      vuetify
+    };
+    
+    wrapper = shallowMount(AppList, options);
   });
 
-  it('is vue instance', () => {
+  it('Is Vue instance', () => {
     expect(wrapper.isVueInstance()).toBe(true);
   });
 
-  it('te', done => {
-    testAction(
-      actions[getCourses],
-      null,
-      state,
-      [
-        {
-          type: getCourses,
-          payload: [
-            { _id: 1, title: 'test' },
-            { _id: 2, title: 'test2' }
-          ]
-        }
-      ],
-      done
-    );
+  it('Renders the course title', () => {
+    const courseTitle = wrapper.vm.$store.getters.allCourses[0].title;
+    const htmlElement = wrapper.find('.title').html();
+    expect(htmlElement).toContain(courseTitle);
   });
 
-  it('calls store action "deleteCourse" when "deleteCourse" method is called', () => {
+  it('Calls "deleteCourse" when "delete" button is clicked', () => {
+    const deleteCourse = jest.fn();
+    wrapper.setMethods({
+      deleteCourse
+    });
     wrapper.find('.btn-delete').trigger('click');
-    wrapper.vm.deleteCourse();
+    expect(deleteCourse).toHaveBeenCalled();
+  });
+
+  it('Dispatched action "deleteCourse" when "delete" button is clicked', () => {
+    wrapper.find('.btn-delete').trigger('click');
     expect(actions[deleteCourse]).toHaveBeenCalled();
   });
-  it('go to "/course/:id" when button "View" is clicked', () => {
-    wrapper.find('.btn-detail').trigger('click');
-    const courseId = wrapper.vm.course._id;
-    const route = `/courses/${courseId}`
-    router.push(route);
+  it('Direct to "/course/:id" after click button "View"', async () => {
+    const course = store.getters.allCourses[0];
+    const route = `/course/${course._id}`;
+    await wrapper.find('.btn-detail').trigger('click');
+    await  Vue.nextTick(function() {
+      wrapper.vm.$router.push(route);
+    });
     expect(wrapper.vm.$route.path).toEqual(route);
   });
 
-  it('should have "2" created courses in store property "searchCourse"', () => {
-    const courses = Array(2).fill({ _id: '1', title: 'test' }).length;
-    const storeCourses = wrapper.vm.$store.getters.searchCourse.length;
-    expect(courses).toEqual(storeCourses);
-  });
+  // it('test', done => {
+  //   testAction(
+  //     actions[getCourses],
+  //     null,
+  //     state,
+  //     [
+  //       {
+  //         type: getCourses,
+  //         payload: [
+  //           { _id: 1, title: 'test' },
+  //           { _id: 2, title: 'test2' }
+  //         ]
+  //       }
+  //     ],
+  //     done
+  //   );
+  // });
 });
