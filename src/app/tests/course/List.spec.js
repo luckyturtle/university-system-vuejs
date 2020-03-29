@@ -97,7 +97,7 @@ describe('Testing AppList.vue', () => {
       localVue,
       vuetify
     };
-    
+
     wrapper = shallowMount(AppList, options);
   });
 
@@ -111,26 +111,27 @@ describe('Testing AppList.vue', () => {
     expect(htmlElement).toContain(courseTitle);
   });
 
-  it('Calls "deleteCourse" when "delete" button is clicked', () => {
+  it('Calls "deleteCourse" when "delete" button is clicked', async () => {
     const deleteCourse = jest.fn();
     wrapper.setMethods({
       deleteCourse
     });
     wrapper.find('.btn-delete').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(deleteCourse).toHaveBeenCalled();
   });
 
-  it('Dispatched action "deleteCourse" when "delete" button is clicked', () => {
+  it('Dispatched action "deleteCourse" when "delete" button is clicked', async () => {
     wrapper.find('.btn-delete').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(actions[deleteCourse]).toHaveBeenCalled();
   });
   it('Direct to "/course/:id" after click button "View"', async () => {
     const course = store.getters.allCourses[0];
     const route = `/course/${course._id}`;
-    await wrapper.find('.btn-detail').trigger('click');
-    await  Vue.nextTick(function() {
-      wrapper.vm.$router.push(route);
-    });
+    wrapper.find('.btn-detail').trigger('click');
+    await wrapper.vm.$nextTick();
+    wrapper.vm.$router.push(route);
     expect(wrapper.vm.$route.path).toEqual(route);
   });
 

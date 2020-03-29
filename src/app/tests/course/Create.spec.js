@@ -58,17 +58,19 @@ describe('Testing AppCreate.vue', () => {
     expect(wrapper.isVueInstance()).toBe(true);
   });
 
-  it('Calls "createCourse" when "Create" button is clicked', () => {
+  it('Calls "createCourse" when "Create" button is clicked', async () => {
     const createCourse = jest.fn();
     wrapper.setMethods({
       createCourse
     });
     wrapper.find('.submit').trigger('submit');
+    await wrapper.vm.$nextTick();
     expect(createCourse).toHaveBeenCalled();
   });
 
-  it('Dispatch action "createCourse" when "Create" button is clicked', () => {
+  it('Dispatch action "createCourse" when "Create" button is clicked', async () => {
     wrapper.find('.submit').trigger('submit');
+    await wrapper.vm.$nextTick();
     expect(actions[createCourse]).toHaveBeenCalled();
   });
 

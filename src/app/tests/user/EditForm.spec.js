@@ -5,10 +5,9 @@ import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
   default as userState,
-  setUserInfo,
-  getUserCourses
+  updateUserInfo
 } from '../../user/+store/user-state';
-import AppProfile from '../../user/components/Profile.vue';
+import AppEditForm from '../../user/components/EditForm.vue';
 
 Vue.use(Vuetify);
 
@@ -58,8 +57,7 @@ describe('Testing AppProfile.vue', () => {
     mutations = userState.mutations;
 
     actions = {
-      [getUserCourses]: jest.fn(),
-      [setUserInfo]: jest.fn()
+      [updateUserInfo]: jest.fn()
     };
 
     store = new Vuex.Store({
@@ -73,7 +71,7 @@ describe('Testing AppProfile.vue', () => {
       }
     });
 
-    wrapper = shallowMount(AppProfile, {
+    wrapper = shallowMount(AppEditForm, {
       store,
       router,
       localVue,
@@ -85,16 +83,28 @@ describe('Testing AppProfile.vue', () => {
     expect(wrapper.isVueInstance()).toBe(true);
   });
 
-  it('Render the user full name', async () => {
+  it('Dispatched actions "updateUserInfo" when button "Update" is clicked', async () => {
+    wrapper.find({ ref: 'updateForm' }).trigger('submit');
     await wrapper.vm.$nextTick();
-    const userFullName = wrapper.vm.$store.getters.userInfo.name;
-    const htmlElement = wrapper.find('.fullname').html();
-    expect(htmlElement).toContain(userFullName);
+    expect(actions[updateUserInfo]).toHaveBeenCalled();
   });
 
-  it('Dispatched actions "getUserCourses" and "setUserInfo" when component is created', async () => {
+  it('Call method "updateForm" when form is submit', async () => {
+    const updateForm = jest.fn();
+    wrapper.setMethods({
+      updateForm
+    });
+    wrapper.find({ ref: 'updateForm' }).trigger('submit');
     await wrapper.vm.$nextTick();
-    expect(actions[getUserCourses]).toHaveBeenCalled();
-    expect(actions[setUserInfo]).toHaveBeenCalled();
+    expect(updateForm).toHaveBeenCalled();
+  });
+
+  it('Component should has all required properties', () => {
+    const requiredProps = ['user'];
+    const componentProps = Object.keys(wrapper.vm.$data);
+    const hasAllProps = requiredProps.every(
+      e => componentProps.indexOf(e) >= 0
+    );
+    expect(hasAllProps).toEqual(true);
   });
 });

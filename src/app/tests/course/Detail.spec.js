@@ -78,7 +78,7 @@ describe('Testing AppDetail.vue', () => {
       vuetify,
       propsData: {
         id: '2d6144c4ca822500155df3b9'
-      },
+      }
     };
     wrapper = shallowMount(AppDetail, options);
   });
@@ -91,48 +91,53 @@ describe('Testing AppDetail.vue', () => {
     expect(actions[getCourses]).toHaveBeenCalled();
   });
 
-  it('Call "next()" when "next" arrow button is clicked', () => {
+  it('Call "next()" when "next" arrow button is clicked', async () => {
     const next = jest.fn();
     wrapper.setMethods({
       next
     });
     wrapper.find('.btn-next').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(next).toHaveBeenCalled();
   });
 
-  it('Call "prev()" when "prev" arrow button is clicked', () => {
+  it('Call "prev()" when "prev" arrow button is clicked', async () => {
     const prev = jest.fn();
     wrapper.setMethods({
       prev
     });
     wrapper.find('.btn-prev').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(prev).toHaveBeenCalled();
   });
 
-  // it('test', async () => {
-  //   wrapper.find('.btn-prev').trigger('click');
-  //   // expect(push).toHaveBeenCalledWith(`/course/e56256c4fg8h8500155df3b9`);
-  //   // expect(wrapper.vm.$data.onboarding).toEqual(0);
-  // });
+  it('Go to next course route after click "next" arrow button', async done => {
+    const list = wrapper.vm.$store.getters.allCourses;
+    const onboardingIdx = wrapper.vm.$data.onboarding;
+    const nextId = list[onboardingIdx + 1]._id;
+    const route = `/course/${nextId}`;
+    wrapper.find('.btn-next').trigger('click');
+    Vue.nextTick(() => {
+      wrapper.vm.$router.push(route);
+      Vue.nextTick(() => {
+        expect(wrapper.vm.$route.path).toEqual(route);
+        done()
+      });
+    });
+  });
 
-  // it('Should render the course, duration and start date title', () => {
-  //   const {
-  //     title,
-  //     duration,
-  //     startDate
-  //   } = wrapper.vm.$store.getters.allCourses[0];
-
-  //   const htmlElement = wrapper.find('.title').html();
-  //   expect(htmlElement).toContain(courseTitle);
-  // });
-
-  // it('Direct to "/course/:id" after click button "View"', async () => {
-  //   const course = store.getters.allCourses[0];
-  //   const route = `/course/${course._id}`;
-  //   await wrapper.find('.btn-detail').trigger('click');
-  //   await Vue.nextTick(function() {
-  //     wrapper.vm.$router.push(route);
-  //   });
-  //   expect(wrapper.vm.$route.path).toEqual(route);
-  // });
+  it('Go to previous course route after click "prev" arrow button', async done => {
+    const list = wrapper.vm.$store.getters.allCourses;
+    const onboardingIdx = wrapper.vm.$data.onboarding;
+    const nextId = onboardingIdx - 1 >= 0 ? list[onboardingIdx - 1]._id : list[list.length - 1]._id
+    const route = `/course/${nextId}`;
+    wrapper.find('.btn-prev').trigger('click');
+    Vue.nextTick(() => {
+      wrapper.vm.$router.push(route);
+      Vue.nextTick(() => {
+        expect(wrapper.vm.$route.path).toEqual(route);
+        done()
+      });
+    });
+  });
 });

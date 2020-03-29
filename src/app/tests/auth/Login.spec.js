@@ -65,17 +65,19 @@ describe('Testing AppLogin.vue', () => {
     expect(wrapper.isVueInstance()).toBe(true);
   });
 
-  it('Calls "login" when "Login" button is clicked', () => {
+  it('Calls "login" when "Login" button is clicked',async () => {
     const login = jest.fn();
     wrapper.setMethods({
       login
     });
     wrapper.find({ ref: 'loginForm' }).trigger('submit');
+    await wrapper.vm.$nextTick();
     expect(login).toHaveBeenCalled();
   });
 
-  it('Dispatch action "loginSuccess" when "login" button is clicked', () => {
+  it('Dispatch action "loginSuccess" when "login" button is clicked',async () => {
     wrapper.find({ ref: 'loginForm' }).trigger('submit');
+    await wrapper.vm.$nextTick();
     expect(actions[loginSuccess]).toHaveBeenCalled();
   });
 
