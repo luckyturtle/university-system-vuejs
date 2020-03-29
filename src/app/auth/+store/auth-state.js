@@ -4,7 +4,6 @@ import { http } from '../../services/httpClient';
 const initialState = {
   isAuth: localStorage.getItem('authtoken') !== null,
   authtoken: localStorage.getItem('authtoken'),
-  userInfo: null
 };
 
 export const actionTypes = {
@@ -25,6 +24,7 @@ const actions = {
     const { username, password } = payload;
     const { data } = await http.post('login', { username, password });
     localStorage.setItem('authtoken', data._kmd.authtoken);
+    localStorage.setItem('userInfo', JSON.stringify(data));
     toastSuccess('Successfully Logged!');
     commit(loginSuccess, {
       userInfo: data,

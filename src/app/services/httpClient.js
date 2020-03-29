@@ -1,6 +1,4 @@
 import axios from 'axios';
-// import store from '../../app-state';
-// import { setSnackbarError } from '../+store/snackbar-state';
 import { cacheAdapterEnhancer } from 'axios-extensions';
 
 import { toastError } from '../utils/toasted';
@@ -8,6 +6,7 @@ import { toastError } from '../utils/toasted';
 const baseUrl = 'https://baas.kinvey.com';
 const appKey = 'kid_r1iJRsULU';
 const appSecret = 'edc60c8e88534c27bba5af3824f3e919';
+const dbCollections = ['courses', 'students'];
 
 const cacheConfig = {
   enabledByDefault: false,
@@ -37,7 +36,10 @@ const authInterceptor = function(config) {
     };
   } else {
     const token = localStorage.getItem('authtoken');
-    config.baseURL = `${baseUrl}/appdata/${appKey}`;
+
+    config.baseURL = dbCollections.some(c => config.url.includes(c))
+      ? `${baseUrl}/appdata/${appKey}`
+      : `${baseUrl}/user/${appKey}`;
     config.headers = {
       ...config.headers,
       'Content-Type': 'application/json',
@@ -61,19 +63,12 @@ const errorInterceptor = function(error) {
     toastError(
       `${error.response.statusText}: ${error.response.data.description}`
     );
-    // store.dispatch(setSnackbarError, {
-    //   message: `${error.response.statusText}: ${error.response.data.description}`
-    // });
   } else if (error.response.status === 500) {
     toastError(`${error.response.statusText}: Server Error`);
-    // store.dispatch(setSnackbarError, {
-    //   message: `${error.response.statusText}: Server Error`
-    // });
+  } else if (error.response.status === 409) {
+    toastError(`${error.response.statusText}: Username is already used`);
   } else {
     toastError(`${error.response.statusText}`);
-    // store.dispatch(setSnackbarError, {
-    //   message: `${error.response.statusText}`
-    // });
   }
 
   return Promise.reject(error);
