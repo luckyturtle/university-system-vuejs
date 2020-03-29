@@ -64,13 +64,13 @@
                 v-model="email"
                 prepend-icon="email"
                 :loading="loading"
-                :rules="[rules.required('Email')]"
+                :rules="[rules.required('Email'), rules.email]"
                 label="E-mail"
                 type="email"
                 required
               ></v-text-field>
               <v-text-field
-                v-model="departmant"
+                v-model="department"
                 prepend-icon="account_balance"
                 :loading="loading"
                 :rules="[rules.required()]"
@@ -149,7 +149,7 @@ export default {
           department: this.department
         });
         this.loading = false;
-        this.$router.push('/login');
+        this.$router.push('/auth/login');
       } catch (err) {
         this.loading = false;
         this.$refs.registerForm.reset();

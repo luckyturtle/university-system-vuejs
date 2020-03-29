@@ -1,5 +1,5 @@
 export const rules = {
-  email: v => (v || '').match(/@/) || 'Please enter a valid email',
+  email: v => !!(v || '').match(/[\w\\.-]{3,}@[\w]{2,}\.[a-z]{2,}/) || 'Please enter a valid email',
   length: len => v =>
     (v || '').length <= len ||
     `Invalid character length, required less than ${len}`,
