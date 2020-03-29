@@ -1,18 +1,24 @@
 import AppLogin from './components/Login';
 import AppRegister from './components/Register';
-import { innerGuard } from '../shared/services/guards';
-
+import { innerGuard } from '../utils/guards';
+import AppAuth from './Auth.vue';
 export default [
   {
-    path: '/login',
-    name: 'login',
-    component: AppLogin,
-    beforeEnter: innerGuard
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: AppRegister,
+    path: '/auth',
+    component: AppAuth,
+    redirect: { name: 'login' },
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: AppLogin
+      },
+      {
+        path: 'register',
+        name: 'register',
+        component: AppRegister
+      }
+    ],
     beforeEnter: innerGuard
   }
 ];

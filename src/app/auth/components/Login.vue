@@ -7,7 +7,7 @@
         </h2>
       </v-card-title>
       <v-card-text>
-        <v-form @submit.prevent="login" v-model="valid" ref="loginForm">
+        <v-form @submit.native="login" v-model="valid" ref="loginForm">
           <v-text-field
             prepend-icon="account_box"
             v-model="username"
@@ -53,14 +53,14 @@
         <span class="mr-4">
           Don't have an account?
         </span>
-        <router-link to="/register">Register</router-link>
+        <router-link :to="{path: '/auth/register'}">Register</router-link>
       </v-card-actions>
     </v-card>
   </v-col>
 </template>
 
 <script>
-import { rules } from '../../shared/services/validators';
+import { rules } from '../../utils/validators';
 import { loginSuccess } from '../+store/auth-state';
 import { mapActions } from 'vuex';
 
@@ -79,7 +79,8 @@ export default {
   },
   methods: {
     ...mapActions([loginSuccess]),
-    async login() {
+    async login(ev) {
+      ev.preventDefault()
       try {
         this.loading = true;
         await this[loginSuccess]({

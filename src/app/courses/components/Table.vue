@@ -115,7 +115,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { rules } from '../../shared/services/validators';
+import { rules } from '../../utils/validators';
 import {
   getStudents,
   postStudent,
@@ -172,7 +172,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['allStudents', 'getStudentInfo']),
+    ...mapGetters(['allStudents']),
 
     formTitle() {
       return this.editedIndex === -1 ? 'Add Student' : 'Edit Student';

@@ -5,7 +5,7 @@
       @click.stop="drawer = !drawer"
     ></v-app-bar-nav-icon>
     <v-row rows="12" md="4" align="center" justify="start" class="ml-4 logo">
-      <router-link class="router-link" to="/">
+      <router-link class="router-link" :to="{ name: 'home' }">
         <div class="d-flex align-center">
           <v-img
             alt="University Logo"
@@ -28,19 +28,19 @@
         justify="end"
         class="mr-4"
       >
-        <router-link class="router-link" to="/profile">
+        <router-link class="router-link" :to="{ path: '/user/profile' }">
           <v-btn text>
             <v-icon>account_circle</v-icon>
             <span class="mr-4">Profile</span>
           </v-btn>
         </router-link>
-        <router-link class="router-link" to="/courses">
+        <router-link class="router-link" :to="{ path: '/course/list' }">
           <v-btn text>
             <v-icon>event_note</v-icon>
             <span class="mr-4">Courses</span>
           </v-btn>
         </router-link>
-        <router-link class="router-link mr-8" to="/create-course">
+        <router-link class="router-link mr-8" :to="{ path: '/course/create' }">
           <v-btn text>
             <v-icon>create</v-icon>
             <span class="mr-4">Create Course</span>
@@ -61,13 +61,13 @@
         </v-btn>
       </v-row>
       <v-row rows="12" md="8" v-else align="center" justify="end">
-        <router-link class="router-link" to="/login" v-if="!isAuth">
+        <router-link class="router-link" :to="{ path: '/auth/login' }" v-if="!isAuth">
           <v-btn text>
             <v-icon>person_pin</v-icon>
             <span class="mr-4">Login</span>
           </v-btn>
         </router-link>
-        <router-link class="router-link" to="/register" v-if="!isAuth">
+        <router-link class="router-link" :to="{ path: '/auth/register' }" v-if="!isAuth">
           <v-btn text>
             <v-icon>perm_identity</v-icon>
             <span class="mr-4">Register</span>
@@ -80,7 +80,7 @@
 
 <script>
 import { logoutSuccess } from '../../auth/+store/auth-state';
-import { http } from '../../shared/services/httpClient';
+import { http } from '../../services/httpClient';
 import { mapGetters, mapActions } from 'vuex';
 import { getSearchCourse } from '../../courses/+store/course-state';
 export default {
@@ -109,8 +109,8 @@ export default {
       const { data: courses } = await http.get('courses');
       this[getSearchCourse]({ courses, searchInput: this.searchInput });
       this.searchInput = '';
-      if (this.$route.path !== '/courses') {
-        this.$router.push('/courses');
+      if (this.$route.path !== '/course/list') {
+        this.$router.push('/course/list');
       }
     }
   }

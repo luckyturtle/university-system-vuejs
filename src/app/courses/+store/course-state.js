@@ -1,7 +1,7 @@
 // import { setSnackbarSuccess } from '../../shared/+store/snackbar-state';
-import { http } from '../../shared/services/httpClient';
-import { dbStorage } from '../../shared/services/firebaseConfig';
-import { toastSuccess } from '../../shared/services/toasted';
+import { http } from '../../services/httpClient';
+import { dbStorage } from '../../utils/firebaseConfig';
+import { toastSuccess } from '../../utils/toasted';
 
 const initialState = {
   allCourses: [],
@@ -12,7 +12,7 @@ const initialState = {
   searchCourse: null
 };
 
-const actionTypes = {
+export const actionTypes = {
   getCourses: '[COURSE] GET ALL COURSES SUCCESS',
   getCourse: '[COURSE] GET SINGLE COURSE SUCCESS',
   deleteCourse: '[COURSE] DELETE COURSE SUCCESS',
@@ -179,7 +179,7 @@ const mutations = {
     Object.assign(state, { searchCourse: payload });
   },
   [resetCourses](state) {
-    Object.assign(state, { allCourses: [], searchCourse: null });
+    Object.assign(state, {  searchCourse: null });
   }
 };
 

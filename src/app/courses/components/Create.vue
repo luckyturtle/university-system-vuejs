@@ -2,7 +2,7 @@
   <v-col cols="12" md="12" align="center">
     <v-card width="600" elevation="20">
       <v-card-text>
-        <v-form @submit.prevent="create" v-model="valid" class="pa-6">
+        <v-form @submit.native="createCourse" v-model="valid" class="pa-6 submit">
           <v-col cols="12" md="12" align="center">
             <h2>Create Course</h2>
           </v-col>
@@ -100,7 +100,7 @@
 <script>
 import { mapActions } from 'vuex';
 import { createCourse } from '../+store/course-state';
-import { rules } from '../../shared/services/validators';
+import { rules } from '../../utils/validators';
 export default {
   name: 'Create',
   data() {
@@ -112,12 +112,14 @@ export default {
       duration: '',
       selectedFile: null,
       startDate: null,
-      description: ''
+      description: '',
+      students: []
     };
   },
   methods: {
     ...mapActions([createCourse]),
-    async create() {
+    async createCourse(ev) {
+      ev.preventDefault()
       await this[createCourse]({
         title: this.title,
         duration: this.duration,
@@ -126,9 +128,9 @@ export default {
         description: this.description,
         selectedFile: this.selectedFile,
         imageUrl: null,
-        students: []
+        students: this.students
       });
-      this.$router.push('/courses');
+      this.$router.push('/course/list');
     }
   }
 };

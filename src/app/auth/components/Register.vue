@@ -5,7 +5,7 @@
         <h2>Registration</h2>
       </v-card-title>
       <v-card-text>
-        <v-form @submit.prevent="register" ref="registerForm" v-model="valid">
+        <v-form @submit.native="register" ref="registerForm" v-model="valid">
           <v-container class="d-flex justify-space-between">
             <v-container class="mr-4">
               <v-text-field
@@ -64,13 +64,13 @@
                 v-model="email"
                 prepend-icon="email"
                 :loading="loading"
-                :rules="[rules.required('Email')]"
+                :rules="[rules.required('Email'), rules.email]"
                 label="E-mail"
                 type="email"
                 required
               ></v-text-field>
               <v-text-field
-                v-model="departmant"
+                v-model="department"
                 prepend-icon="account_balance"
                 :loading="loading"
                 :rules="[rules.required()]"
@@ -106,14 +106,14 @@
         <span class="mr-4">
           Already have an account?
         </span>
-        <router-link to="/login">Login</router-link>
+        <router-link :to="{ path: '/auth/login' }">Login</router-link>
       </v-card-actions>
     </v-card>
   </v-col>
 </template>
 
 <script>
-import { rules } from '../../shared/services/validators';
+import { rules } from '../../utils/validators';
 import { registerSuccess } from '../+store/auth-state';
 import { mapActions } from 'vuex';
 
@@ -132,22 +132,28 @@ export default {
       rePassword: '',
       username: '',
       email: '',
-      departmant: ''
+      department: ''
     };
   },
   methods: {
     ...mapActions([registerSuccess]),
-    async register() {
-      this.loading = true;
+    async register(ev) {
+      ev.preventDefault();
+      try {
+        this.loading = true;
         await this[registerSuccess]({
           username: this.username,
           password: this.password,
           name: this.name,
           email: this.email,
-          departmant: this.departmant
+          department: this.department
         });
         this.loading = false;
-        this.$router.push('/login');
+        this.$router.push('/auth/login');
+      } catch (err) {
+        this.loading = false;
+        this.$refs.registerForm.reset();
+      }
     },
     reset() {
       this.$refs.registerForm.reset();

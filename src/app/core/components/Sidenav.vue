@@ -17,7 +17,7 @@
         </v-list-item>
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-            <router-link class="router-link" to="/profile">
+            <router-link class="router-link" :to="{ path: '/user/profile' }">
               <v-btn text>
                 <v-icon>account_circle</v-icon>
                 <span class="mr-4">Profile</span>
@@ -28,7 +28,7 @@
 
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-            <router-link class="router-link" to="/courses">
+            <router-link class="router-link" :to="{ path: '/course/list' }">
               <v-btn text>
                 <v-icon>event_note</v-icon>
                 <span class="mr-4">Courses</span>
@@ -39,7 +39,7 @@
 
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-            <router-link to="/create-course" class="router-link mr-8">
+            <router-link :to="{ path: '/course/create' }" class="router-link mr-8">
               <v-btn text>
                 <v-icon>create</v-icon>
                 <span class="mr-4">Create Course</span>
@@ -57,7 +57,7 @@
         </v-list-item>
         <v-list-item v-if="!isAuth">
           <v-list-item-title>
-            <router-link class="router-link" to="/login">
+            <router-link class="router-link" :to="{ path: '/auth/login' }">
               <v-btn text>
                 <v-icon>person_pin</v-icon>
                 <span class="mr-4">Login</span>
@@ -67,7 +67,7 @@
         </v-list-item>
         <v-list-item v-if="!isAuth">
           <v-list-item-title>
-            <router-link class="router-link" to="/register">
+            <router-link class="router-link" :to="{ path: '/auth/register' }">
               <v-btn text>
                 <v-icon>perm_identity</v-icon>
                 <span class="mr-4">Register</span>

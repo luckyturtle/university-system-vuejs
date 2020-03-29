@@ -2,32 +2,34 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { authRoutes } from './auth';
 import { courseRoutes } from './courses';
-import { AppWelcome, AppNotFound } from './core/components';
-import { AppProfile } from './user/components';
-
+import { AppWelcome } from './core/components';
+import { userRoutes } from './user';
+import { globalAuthGuard } from './utils/guards';
 Vue.use(VueRouter);
 
 const appRoutes = [
   {
     path: '/',
-    name: 'welcome',
+    name: 'home',
     component: AppWelcome
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: AppProfile
   },
   {
     path: '*',
     name: 'not-found',
-    component: AppNotFound
+    component: () =>
+      import(
+        /* webpackChunkName: "not-found" */ './core/components/NotFound.vue'
+      )
   }
 ];
 
-const routes = [...appRoutes, ...authRoutes, ...courseRoutes];
+const routes = [...appRoutes, ...authRoutes, ...courseRoutes, ...userRoutes];
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: 'history',
   routes
 });
+
+router.beforeEach(globalAuthGuard);
+
+export default router;

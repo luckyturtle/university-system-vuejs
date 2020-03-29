@@ -1,16 +1,17 @@
 <template>
-  <v-card class="mx-auto" width="600" elevation="24" tile>
+  <app-loader v-if="loading"></app-loader>
+  <v-card v-else class="mx-auto" width="700" elevation="24" tile>
     <v-img
       height="100%"
-      src="https://firebasestorage.googleapis.com/v0/b/university-system-dfd77.appspot.com/o/images%2Fbeautiful-harvard-university.jpg?alt=media&token=4d63f166-531d-49e7-af97-3921d8c97bae"
-      lazy-src="https://firebasestorage.googleapis.com/v0/b/university-system-dfd77.appspot.com/o/images%2Fbeautiful-harvard-university.jpg?alt=media&token=4d63f166-531d-49e7-af97-3921d8c97bae"
+      src="/images/beautiful-harvard-university.jpg"
       gradient="to top right, rgba(0,0,0,.33), rgba(25,32,72,.53)"
     >
       <v-row align="start" class="fill-height">
-        <v-col align-self="start" class="pa-0" cols="12" md="5">
-          <v-avatar class="profile" color="grey" size="164" tile>
+        <v-col align-self="center" class="" cols="12" md="4">
+          <v-avatar class="profile" size="164" tile>
             <v-img
-              src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"
+            aspect-ratio="1"
+              src="/images/1014-512.png"
             ></v-img>
           </v-avatar>
 
@@ -18,67 +19,68 @@
             <v-list-item color="rgba(0, 0, 0, .4)" dark>
               <v-list-item-content>
                 <v-list-item-title class="title">Full name:</v-list-item-title>
-                <v-list-item-subtitle>Georgi Uzuntonev</v-list-item-subtitle>
+                <v-list-item-subtitle class="fullname">{{ userInfo.name }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-list-item color="rgba(0, 0, 0, .4)" dark>
               <v-list-item-content>
                 <v-list-item-title class="title">Email:</v-list-item-title>
-                <v-list-item-subtitle
-                  >georgi.uzuntonev@gmail.com</v-list-item-subtitle
-                >
+                <v-list-item-subtitle>{{
+                  userInfo.email
+                }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <!-- <v-list-item color="rgba(0, 0, 0, .4)" dark>
-              <v-list-item-content>
-                <v-list-item-title class="title"
-                  >Pnone Number:</v-list-item-title
-                >
-                <v-list-item-subtitle>555-555-555-55</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item> -->
           </div>
           <div class="mx-10">
             <app-edit-form></app-edit-form>
           </div>
         </v-col>
-        <v-col cols="12" md="7">
-          <v-list-item color="rgba(0, 0, 0, .4)" dark>
-            <v-list-item-content>
-              <v-list-item-title class="title">Departmant:</v-list-item-title>
-              <v-list-item-subtitle
-                >Information technology</v-list-item-subtitle
-              >
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item color="rgba(0, 0, 0, .4)" dark>
-            <v-list-item-content>
-              <v-list-item-title class="title">Courses:</v-list-item-title>
-              <v-list-item-subtitle>
-                <v-list-item color="rgba(0, 0, 0, .4)" dark>
-                  <v-list-item-content>
-                    <v-list-item-subtitle
-                      >Information technology</v-list-item-subtitle
+        <v-col cols="12" md="8">
+          <v-row align="center" justify="center">
+            <div class="d-flex align-center justify-center">
+              <v-img
+                alt="University Logo"
+                class="shrink logo-img "
+                contain
+                src="/images/university-logo.png"
+                transition="scale-transition"
+                width="90"
+              />
+            </div>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-list-item color="rgba(0, 0, 0, .4)" dark>
+                <v-list-item-content>
+                  <v-list-item-title class="title"
+                    >Departmant:</v-list-item-title
+                  >
+                  <v-list-item-subtitle>{{
+                    userInfo.department
+                  }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-col>
+            <v-col>
+              <v-list-item color="rgba(0, 0, 0, .4)" dark>
+                <v-list-item-content>
+                  <v-list-item-title class="title">Courses:</v-list-item-title>
+                  <v-list-item-subtitle>
+                    <v-list-item
+                      color="rgba(0, 0, 0, .4)"
+                      dark
+                      v-for="(c, i) in courses"
+                      :key="i"
                     >
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item color="rgba(0, 0, 0, .4)" dark>
-                  <v-list-item-content>
-                    <v-list-item-subtitle
-                      >Information technology</v-list-item-subtitle
-                    >
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item color="rgba(0, 0, 0, .4)" dark>
-                  <v-list-item-content>
-                    <v-list-item-subtitle
-                      >Information technology</v-list-item-subtitle
-                    >
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-subtitle>{{ c }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-img>
@@ -87,55 +89,38 @@
 
 <script>
 import AppEditForm from './EditForm.vue';
+import AppLoader from '../../shared/components/Loader.vue';
+import { mapActions, mapGetters } from 'vuex';
+import { setUserInfo, getUserCourses } from '../+store/user-state';
 export default {
   name: 'Profile',
   components: {
-    AppEditForm
+    AppEditForm,
+    AppLoader
   },
   data() {
-    const srcs = {
-      1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-      2: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-      3: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-      4: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-      5: 'https://cdn.vuetifyjs.com/images/lists/5.jpg'
-    };
-
     return {
-      autoUpdate: true,
-      friends: ['Sandra Adams', 'Britta Holt'],
-      isUpdating: false,
-      name: 'Midnight Crew',
-      people: [
-        { header: 'Group 1' },
-        { name: 'Sandra Adams', group: 'Group 1', avatar: srcs[1] },
-        { name: 'Ali Connors', group: 'Group 1', avatar: srcs[2] },
-        { name: 'Trevor Hansen', group: 'Group 1', avatar: srcs[3] },
-        { name: 'Tucker Smith', group: 'Group 1', avatar: srcs[2] },
-        { divider: true },
-        { header: 'Group 2' },
-        { name: 'Britta Holt', group: 'Group 2', avatar: srcs[4] },
-        { name: 'Jane Smith ', group: 'Group 2', avatar: srcs[5] },
-        { name: 'John Smith', group: 'Group 2', avatar: srcs[1] },
-        { name: 'Sandra Williams', group: 'Group 2', avatar: srcs[3] }
-      ],
-      title: 'The summer breeze'
+      loading: false
     };
   },
-
-  watch: {
-    isUpdating(val) {
-      if (val) {
-        setTimeout(() => (this.isUpdating = false), 3000);
-      }
+  computed: {
+    ...mapGetters(['userInfo', 'userCourses']),
+    courses() {
+      return this.userCourses.map(c => c.title);
     }
   },
-
-  methods: {
-    remove(item) {
-      const index = this.friends.indexOf(item.name);
-      if (index >= 0) this.friends.splice(index, 1);
+  async created() {
+    try {
+      this.loading = true;
+      await this[setUserInfo]();
+      await this[getUserCourses]();
+    } catch (err) {
+      console.error(err);
     }
+    this.loading = false;
+  },
+  methods: {
+    ...mapActions([setUserInfo, getUserCourses])
   }
 };
 </script>

@@ -1,25 +1,41 @@
-
-import { authGuard } from '../shared/services/guards';
-
+// import { authGuard } from '../utils/guards';
+import AppCourse from './Course.vue';
 export default [
-  { path: '', redirect: { name: 'course-list' } },
   {
-    path: '/courses',
-    name: 'course-list',
-    component: () => import('../courses/components/List.vue'),
-    beforeEnter: authGuard
-
-  },
-  {
-    path: '/create-course',
-    name: 'course-create',
-    component: () => import('../courses/components/Create.vue'),
-    beforeEnter: authGuard
-  },
-  {
-    path: '/courses/:id',
-    name: 'detail',
-    component: () => import('../courses/components/Detail.vue'),
-    beforeEnter: authGuard
+    path: '/course',
+    component: AppCourse,
+    children: [
+      {
+        path: '',
+        redirect: { name: 'course-list' }
+      },
+      {
+        path: 'list',
+        name: 'course-list',
+        component: () =>
+          import(
+            /* webpackChunkName: "course-list" */ '../courses/components/List.vue'
+          )
+      },
+      {
+        path: 'create',
+        name: 'create-course',
+        component: () =>
+          import(
+            /* webpackChunkName: "course-create" */ '../courses/components/Create.vue'
+          )
+      },
+      {
+        path: ':id',
+        name: 'course-detail',
+        props: true,
+        component: () =>
+          import(
+            /* webpackChunkName: "course-detail" */ '../courses/components/Detail.vue'
+          )
+      }
+    ],
+    // beforeEnter: authGuard,
+    meta: { auth: true }
   }
 ];
