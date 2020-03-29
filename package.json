@@ -7,7 +7,9 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "postinstall": "npm run build",
+    "start": "node server.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -29,9 +31,11 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.1.2",
+    "express": "^4.17.1",
     "jest": "^25.1.0",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
+    "serve-static": "^1.14.1",
     "vue-cli-plugin-vuetify": "~2.0.5",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.11",
