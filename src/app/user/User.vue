@@ -1,15 +1,9 @@
 <template>
-  <v-container>
-      <router-view />
-  </v-container>
+  <router-view />
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,9 +1,9 @@
 <template>
-  <v-dialog max-width="500px">
+  <v-dialog v-model="dialog" max-width="500px">
     <template v-slot:activator="{ on }">
       <v-btn color="primary" dark class="mb-2" v-on="on">Edit</v-btn>
     </template>
-    <v-card color="blue-grey darken-1" dark :loading="isUpdating">
+    <v-card color="blue darken-3" dark :loading="isUpdating">
       <template v-slot:progress>
         <v-progress-linear
           absolute
@@ -12,45 +12,32 @@
           indeterminate
         ></v-progress-linear>
       </template>
-      <v-img
-        height="200"
-        src="https://firebasestorage.googleapis.com/v0/b/university-system-dfd77.appspot.com/o/images%2Fbeautiful-harvard-university.jpg?alt=media&token=4d63f166-531d-49e7-af97-3921d8c97bae"
-        lazy-src="https://firebasestorage.googleapis.com/v0/b/university-system-dfd77.appspot.com/o/images%2Fbeautiful-harvard-university.jpg?alt=media&token=4d63f166-531d-49e7-af97-3921d8c97bae"
-      >
-        <v-row>
-          <v-col class="text-right" cols="12">
-            <v-menu bottom left transition="slide-y-transition">
-              <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="isUpdating = true">
-                  <v-list-item-action>
-                    <v-icon>mdi-settings</v-icon>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    <v-list-item-title>Update</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+      <v-img height="200" src="/images/beautiful-harvard-university.jpg">
+        <v-row align="center" justify="center">
+          <div class="d-flex align-center justify-center">
+            <v-img
+              alt="University Logo"
+              class="shrink logo-img "
+              contain
+              src="/images/university-logo.png"
+              transition="scale-transition"
+              width="100"
+            />
+          </div>
+        </v-row>
+        <v-row align="center" justify="center">
+          <v-col class="text-center">
+            <h3 class="headline">University System</h3>
           </v-col>
-          <v-row class="pa-4" align="center" justify="center">
-            <v-col class="text-center">
-              <h3 class="headline">{{ name }}</h3>
-              <span class="grey--text text--lighten-1">{{ title }}</span>
-            </v-col>
-          </v-row>
         </v-row>
       </v-img>
-      <v-form>
+      <v-form @submit.native="updateForm" ref="updateForm" v-model="valid">
         <v-container>
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
-                v-model="name"
+                v-model="user.name"
+                :rules="[rules.required()]"
                 :disabled="isUpdating"
                 filled
                 color="blue-grey lighten-2"
@@ -59,139 +46,106 @@
             </v-col>
             <v-col cols="12" md="6">
               <v-text-field
-                v-model="title"
+                v-model="user.email"
+                :rules="[rules.required(), rules.email]"
                 :disabled="isUpdating"
                 filled
                 color="blue-grey lighten-2"
-                label="Title"
+                label="Email"
               ></v-text-field>
             </v-col>
-            <v-col cols="12">
-              <v-autocomplete
-                v-model="friends"
+          </v-row>
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="user.department"
+                :rules="[rules.required()]"
                 :disabled="isUpdating"
-                :items="people"
                 filled
-                chips
                 color="blue-grey lighten-2"
-                label="Select"
-                item-text="name"
-                item-value="name"
-                multiple
-              >
-                <template v-slot:selection="data">
-                  <v-chip
-                    v-bind="data.attrs"
-                    :input-value="data.selected"
-                    close
-                    @click="data.select"
-                    @click:close="remove(data.item)"
-                  >
-                    <v-avatar left>
-                      <v-img :src="data.item.avatar"></v-img>
-                    </v-avatar>
-                    {{ data.item.name }}
-                  </v-chip>
-                </template>
-                <template v-slot:item="data">
-                  <template v-if="typeof data.item !== 'object'">
-                    <v-list-item-content
-                      v-text="data.item"
-                    ></v-list-item-content>
-                  </template>
-                  <template v-else>
-                    <v-list-item-avatar>
-                      <img :src="data.item.avatar" />
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title
-                        v-html="data.item.name"
-                      ></v-list-item-title>
-                      <v-list-item-subtitle
-                        v-html="data.item.group"
-                      ></v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                </template>
-              </v-autocomplete>
+                label="Department"
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-container>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            type="button"
+            @click="resetForm"
+            :loading="isUpdating"
+            color="blue-grey darken-3"
+            depressed
+          >
+            <v-icon left>mdi-update</v-icon>
+            Reset
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            type="submit"
+            :disabled="!valid"
+            :loading="isUpdating"
+            color="blue-grey darken-3"
+            depressed
+          >
+            <v-icon left>mdi-update</v-icon>
+            Update Now
+          </v-btn>
+        </v-card-actions>
       </v-form>
-      <v-divider></v-divider>
-      <v-card-actions>
-        <v-switch
-          v-model="autoUpdate"
-          :disabled="isUpdating"
-          class="mt-0"
-          color="green lighten-2"
-          hide-details
-          label="Auto Update"
-        ></v-switch>
-        <v-spacer></v-spacer>
-        <v-btn
-          :disabled="autoUpdate"
-          :loading="isUpdating"
-          color="blue-grey darken-3"
-          depressed
-          @click="isUpdating = true"
-        >
-          <v-icon left>mdi-update</v-icon>
-          Update Now
-        </v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import { rules } from '../../utils/validators';
+import { mapGetters, mapActions } from 'vuex';
+import { updateUserInfo } from '../+store/user-state';
+
 export default {
   name: 'EditeForm',
   data() {
-    const srcs = {
-      1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-      2: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-      3: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-      4: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-      5: 'https://cdn.vuetifyjs.com/images/lists/5.jpg'
-    };
-
     return {
-      autoUpdate: true,
-      friends: ['Sandra Adams', 'Britta Holt'],
+      rules,
+      dialog: false,
+      valid: false,
       isUpdating: false,
-      name: 'Midnight Crew',
-      people: [
-        { header: 'Group 1' },
-        { name: 'Sandra Adams', group: 'Group 1', avatar: srcs[1] },
-        { name: 'Ali Connors', group: 'Group 1', avatar: srcs[2] },
-        { name: 'Trevor Hansen', group: 'Group 1', avatar: srcs[3] },
-        { name: 'Tucker Smith', group: 'Group 1', avatar: srcs[2] },
-        { divider: true },
-        { header: 'Group 2' },
-        { name: 'Britta Holt', group: 'Group 2', avatar: srcs[4] },
-        { name: 'Jane Smith ', group: 'Group 2', avatar: srcs[5] },
-        { name: 'John Smith', group: 'Group 2', avatar: srcs[1] },
-        { name: 'Sandra Williams', group: 'Group 2', avatar: srcs[3] }
-      ],
-      title: 'The summer breeze'
+      user: null
     };
   },
-  watch: {
-    isUpdating(val) {
-      if (val) {
-        setTimeout(() => (this.isUpdating = false), 3000);
-      }
-    }
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
+  created() {
+    this.user = {
+      name: this.userInfo.name,
+      email: this.userInfo.email,
+      department: this.userInfo.department
+    };
   },
 
   methods: {
-    remove(item) {
-      const index = this.friends.indexOf(item.name);
-      if (index >= 0) this.friends.splice(index, 1);
+    ...mapActions([updateUserInfo]),
+    async updateForm(ev) {
+      ev.preventDefault()
+      try {
+        await this[updateUserInfo](this.user);
+      } catch (err) {
+        this.clearForm();
+        console.error(err);
+      }
+      this.isUpdating = false;
+      this.dialog = false;
+    },
+    resetForm() {
+      this.user = {
+        name: this.userInfo.name,
+        email: this.userInfo.email,
+        department: this.userInfo.department
+      };
     }
   }
 };
 </script>
 
-<style></style>
+<style scoped></style>

@@ -13,7 +13,7 @@ export default [
         name: 'profile',
         component: () =>
           import(
-            /* webpackChunkName: "course-list" */ '../user/components/Profile.vue'
+            /* webpackChunkName: "user-profile" */ '../user/components/Profile.vue'
           )
       }
     ],
