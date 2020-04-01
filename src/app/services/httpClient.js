@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { cacheAdapterEnhancer } from 'axios-extensions';
 
-import { toastError } from '../utils/toasted';
+import { toastError } from '@/plugins/toasted';
 
 const baseUrl = 'https://baas.kinvey.com';
 const appKey = 'kid_r1iJRsULU';
@@ -79,24 +79,5 @@ const responseInterceptor = function(response) {
 };
 
 http.interceptors.response.use(responseInterceptor, errorInterceptor);
-
-// http.interceptors.response.use(
-//   response => {
-//     return response;
-//   },
-//   error => {
-//     if (error.response.status === 401) {
-//       store.dispatch(setSnackbarError, {
-//         message: `${error.response.statusText}: ${error.response.data.description}`
-//       });
-//     } else {
-//       store.dispatch(setSnackbarError, {
-//         message: `${error.response.statusText}`
-//       });
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
 
 export { http };

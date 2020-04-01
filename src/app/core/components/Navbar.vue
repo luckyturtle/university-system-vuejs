@@ -61,13 +61,21 @@
         </v-btn>
       </v-row>
       <v-row rows="12" md="8" v-else align="center" justify="end">
-        <router-link class="router-link" :to="{ path: '/auth/login' }" v-if="!isAuth">
+        <router-link
+          class="router-link"
+          :to="{ path: '/auth/login' }"
+          v-if="!isAuth"
+        >
           <v-btn text>
             <v-icon>person_pin</v-icon>
             <span class="mr-4">Login</span>
           </v-btn>
         </router-link>
-        <router-link class="router-link" :to="{ path: '/auth/register' }" v-if="!isAuth">
+        <router-link
+          class="router-link"
+          :to="{ path: '/auth/register' }"
+          v-if="!isAuth"
+        >
           <v-btn text>
             <v-icon>perm_identity</v-icon>
             <span class="mr-4">Register</span>
@@ -79,10 +87,12 @@
 </template>
 
 <script>
-import { logoutSuccess } from '../../auth/+store/auth-state';
-import { http } from '../../services/httpClient';
+import { logout } from '../../auth/+store/auth-state';
 import { mapGetters, mapActions } from 'vuex';
-import { getSearchCourse } from '../../courses/+store/course-state';
+import {
+  getCourseSearch,
+  getAllCourses
+} from '../../courses/+store/course-state';
 export default {
   name: 'Navbar',
   data() {
@@ -92,7 +102,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['isAuth'])
+    ...mapGetters(['isAuth', 'allCourses'])
   },
   watch: {
     drawer(val) {
@@ -100,14 +110,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions([logoutSuccess, getSearchCourse]),
+    ...mapActions([logout, getCourseSearch, getAllCourses]),
     logout() {
-      this[logoutSuccess]();
+      this[logout]();
       this.$router.push('/');
     },
     async search() {
-      const { data: courses } = await http.get('courses');
-      this[getSearchCourse]({ courses, searchInput: this.searchInput });
+      await this[getAllCourses]();
+      this[getCourseSearch]({
+        courses: this.allCourses,
+        searchInput: this.searchInput
+      });
       this.searchInput = '';
       if (this.$route.path !== '/course/list') {
         this.$router.push('/course/list');

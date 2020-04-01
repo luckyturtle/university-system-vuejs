@@ -5,7 +5,7 @@ import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils';
 import {
   default as authState,
-  loginSuccess
+  login
 } from '../../auth/+store/auth-state';
 import AppLogin from '../../auth/components/Login.vue';
 
@@ -34,7 +34,7 @@ describe('Testing AppLogin.vue', () => {
     mutations = authState.mutations;
 
     actions = {
-      [loginSuccess]: jest.fn()
+      [login]: jest.fn()
     };
 
     store = new Vuex.Store({
@@ -75,10 +75,10 @@ describe('Testing AppLogin.vue', () => {
     expect(login).toHaveBeenCalled();
   });
 
-  it('Dispatch action "loginSuccess" when "login" button is clicked',async () => {
+  it('Dispatch action "login" when "login" button is clicked',async () => {
     wrapper.find({ ref: 'loginForm' }).trigger('submit');
     await wrapper.vm.$nextTick();
-    expect(actions[loginSuccess]).toHaveBeenCalled();
+    expect(actions[login]).toHaveBeenCalled();
   });
 
   it('Component should has all required properties', () => {

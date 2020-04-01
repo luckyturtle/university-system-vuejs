@@ -114,7 +114,7 @@
 
 <script>
 import { rules } from '../../utils/validators';
-import { registerSuccess } from '../+store/auth-state';
+import { register } from '../+store/auth-state';
 import { mapActions } from 'vuex';
 
 export default {
@@ -136,12 +136,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions([registerSuccess]),
+    ...mapActions([register]),
     async register(ev) {
       ev.preventDefault();
       try {
         this.loading = true;
-        await this[registerSuccess]({
+        await this[register]({
           username: this.username,
           password: this.password,
           name: this.name,

@@ -5,11 +5,10 @@ import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
   default as courseState,
-  getCourses,
+  getAllCourses,
   deleteCourse
 } from '../../courses/+store/course-state';
 import AppList from '../../courses/components/List.vue';
-import { testAction, asyncCallback } from '../../utils/unit-test';
 
 Vue.use(Vuetify);
 
@@ -44,7 +43,7 @@ describe('Testing AppList.vue', () => {
           imageUrl: 'https://test.test'
         }
       ],
-      searchCourse: [
+      courseSearch: [
         {
           _id: '2d6144c4ca822500155df3b9',
           title: 'Typescript',
@@ -54,16 +53,6 @@ describe('Testing AppList.vue', () => {
           description: 'Test test',
           available: true,
           imageUrl: 'https://test.test'
-        },
-        {
-          _id: '5e6144c4ca822500151256t3',
-          title: 'Javascript',
-          duration: '4',
-          startDate: '2020-04-29',
-          students: [],
-          description: 'Demo demo',
-          available: true,
-          imageUrl: 'https://demo.test'
         }
       ]
     };
@@ -72,12 +61,7 @@ describe('Testing AppList.vue', () => {
 
     actions = {
       [deleteCourse]: jest.fn(),
-      [getCourses]: jest.fn(
-        asyncCallback(getCourses, [
-          { _id: 1, title: 'test' },
-          { _id: 2, title: 'test2' }
-        ])
-      )
+      [getAllCourses]: jest.fn()
     };
 
     store = new Vuex.Store({
@@ -135,21 +119,4 @@ describe('Testing AppList.vue', () => {
     expect(wrapper.vm.$route.path).toEqual(route);
   });
 
-  // it('test', done => {
-  //   testAction(
-  //     actions[getCourses],
-  //     null,
-  //     state,
-  //     [
-  //       {
-  //         type: getCourses,
-  //         payload: [
-  //           { _id: 1, title: 'test' },
-  //           { _id: 2, title: 'test2' }
-  //         ]
-  //       }
-  //     ],
-  //     done
-  //   );
-  // });
 });

@@ -49,29 +49,29 @@
           Join to out university system
         </h2>
         <div>
-        <router-link :to="{ path: '/auth/login' }" class="router-link">
-          <v-btn color="primary" class="mr-4 mb-4" width="300"
-            >Login</v-btn
-          ></router-link
-        >
+          <router-link :to="{ path: '/auth/login' }" class="router-link">
+            <v-btn color="primary" class="mr-4 mb-4" width="300"
+              >Login</v-btn
+            ></router-link
+          >
 
-        <router-link :to="{ path: '/auth/register' }" class="router-link">
-          <v-btn color="primary" class="mr-4 mb-4" width="300">Register</v-btn>
-        </router-link>
+          <router-link :to="{ path: '/auth/register' }" class="router-link">
+            <v-btn color="primary" class="mr-4 mb-4" width="300"
+              >Register</v-btn
+            >
+          </router-link>
         </div>
-
       </v-row>
     </v-col>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: 'Welcome',
   computed: {
-    isAuth() {
-      return this.$store.getters.isAuth;
-    }
+    ...mapGetters(['isAuth'])
   }
 };
 </script>

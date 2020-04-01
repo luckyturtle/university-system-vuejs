@@ -1,4 +1,4 @@
-import { toastSuccess } from '../../utils/toasted';
+import { toastSuccess } from '@/plugins/toasted';
 import { http } from '../../services/httpClient';
 const initialState = {
   userInfo: null,

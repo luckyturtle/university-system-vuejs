@@ -5,7 +5,7 @@ import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils';
 import {
   default as authState,
-  registerSuccess
+  register
 } from '../../auth/+store/auth-state';
 import AppRegister from '../../auth/components/Register.vue';
 
@@ -34,7 +34,7 @@ describe('Testing AppRegister.vue', () => {
     mutations = authState.mutations;
 
     actions = {
-      [registerSuccess]: jest.fn()
+      [register]: jest.fn()
     };
 
     store = new Vuex.Store({
@@ -72,9 +72,9 @@ describe('Testing AppRegister.vue', () => {
     expect(register).toHaveBeenCalled();
   });
 
-  it('Dispatch action "registerSuccess" when "Register" button is clicked', () => {
+  it('Dispatch action "register" when "Register" button is clicked', () => {
     wrapper.find({ ref: 'registerForm' }).trigger('submit');
-    expect(actions[registerSuccess]).toHaveBeenCalled();
+    expect(actions[register]).toHaveBeenCalled();
   });
 
   it('Component should has all required properties', () => {

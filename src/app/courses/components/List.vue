@@ -1,4 +1,5 @@
 <template>
+<v-container>
   <app-loader v-if="loading"></app-loader>
   <v-row v-else>
     <v-col cols="12" md="3" v-if="isFound">
@@ -13,7 +14,7 @@
       v-else
       cols="12"
       md="3"
-      v-for="course in searchCourse || allCourses"
+      v-for="course in courseSearch || allCourses"
       :key="course._id"
     >
       <v-card class="mx-auto" width="400" elevation="20">
@@ -78,12 +79,14 @@
      
     </v-col>
   </v-row>
+</v-container>
+
 </template>
 
 <script>
 import AppLoader from '@/app/shared/components/Loader.vue';
 import { mapGetters, mapActions } from 'vuex';
-import { getCourses, deleteCourse, resetCourses } from '../+store/course-state';
+import { getAllCourses, deleteCourse, resetCourses } from '../+store/course-state';
 export default {
   name: 'List',
   components: {
@@ -95,20 +98,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['allCourses', 'searchCourse']),
+    ...mapGetters(['allCourses', 'courseSearch']),
     isFound() {
-      return this.searchCourse !== null && this.searchCourse.length === 0;
+      return this.courseSearch !== null && this.courseSearch.length === 0;
     }
   },
   created() {
     this.loading = true;
-    this[getCourses]().then(() => (this.loading = false));
+    this[getAllCourses]().then(() => (this.loading = false));
   },
   destroyed() {
     this[resetCourses]();
   },
   methods: {
-    ...mapActions([getCourses, deleteCourse, resetCourses]),
+    ...mapActions([getAllCourses, deleteCourse, resetCourses]),
     deleteCourse(id) {
       this[deleteCourse](id);
     }

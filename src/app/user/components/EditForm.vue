@@ -132,7 +132,6 @@ export default {
         await this[updateUserInfo](this.user);
       } catch (err) {
         this.clearForm();
-        console.error(err);
       }
       this.isUpdating = false;
       this.dialog = false;

@@ -32,7 +32,11 @@
             >
           </template>
           <v-card>
-            <v-form @submit.prevent="save" ref="saveStudentForm" v-model="valid">
+            <v-form
+              @submit.prevent="save"
+              ref="saveStudentForm"
+              v-model="valid"
+            >
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
@@ -117,7 +121,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import { rules } from '../../utils/validators';
 import {
-  getStudents,
+  getAllStudents,
   postStudent,
   updateStudent,
   removeStudent
@@ -186,10 +190,10 @@ export default {
   },
 
   created() {
-    this[getStudents]();
+    this[getAllStudents]();
   },
   methods: {
-    ...mapActions([getStudents, postStudent, updateStudent, removeStudent]),
+    ...mapActions([getAllStudents, postStudent, updateStudent, removeStudent]),
 
     editStudent(student) {
       this.dialog = true;
@@ -198,6 +202,9 @@ export default {
     },
 
     deleteStudent(student) {
+      if (!confirm('Are you sure you want to delete this student?')) {
+        return;
+      }
       this[removeStudent]({ student, course: this.course });
       this.students = this.students.filter(s => s !== student);
     },
@@ -226,8 +233,7 @@ export default {
     },
     reset() {
       this.editedStudent = this.defaultStudent;
-      this.$refs.saveStudentForm.reset()
-
+      this.$refs.saveStudentForm.reset();
     },
     select() {
       this.editedStudent = this.selectedStudent;

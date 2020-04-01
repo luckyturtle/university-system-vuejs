@@ -61,7 +61,7 @@
 
 <script>
 import { rules } from '../../utils/validators';
-import { loginSuccess } from '../+store/auth-state';
+import { login } from '../+store/auth-state';
 import { mapActions } from 'vuex';
 
 export default {
@@ -78,12 +78,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions([loginSuccess]),
+    ...mapActions([login]),
     async login(ev) {
       ev.preventDefault()
       try {
         this.loading = true;
-        await this[loginSuccess]({
+        await this[login]({
           username: this.username,
           password: this.password
         });

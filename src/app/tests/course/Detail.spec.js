@@ -5,7 +5,7 @@ import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
   default as courseState,
-  getCourses,
+  getAllCourses,
   deleteCourse
 } from '../../courses/+store/course-state';
 import AppDetail from '../../courses/components/Detail.vue';
@@ -58,7 +58,7 @@ describe('Testing AppDetail.vue', () => {
     mutations = courseState.mutations;
 
     actions = {
-      [getCourses]: jest.fn()
+      [getAllCourses]: jest.fn()
     };
 
     store = new Vuex.Store({
@@ -87,8 +87,8 @@ describe('Testing AppDetail.vue', () => {
     expect(wrapper.isVueInstance()).toBe(true);
   });
 
-  it('Dispatched action "getCourses" in created hook', () => {
-    expect(actions[getCourses]).toHaveBeenCalled();
+  it('Dispatched action "getAllCourses" in created hook', () => {
+    expect(actions[getAllCourses]).toHaveBeenCalled();
   });
 
   it('Call "next()" when "next" arrow button is clicked', async () => {
