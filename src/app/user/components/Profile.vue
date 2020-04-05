@@ -42,7 +42,7 @@
               <div class="d-flex align-center justify-center">
                 <v-img
                   alt="University Logo"
-                  class="shrink logo-img "
+                  class="shrink logo-img"
                   contain
                   src="/images/university-logo.png"
                   transition="scale-transition"
@@ -96,28 +96,28 @@
 import AppEditForm from './EditForm.vue';
 import AppLoader from '../../shared/components/Loader.vue';
 import { mapActions, mapGetters } from 'vuex';
-import { setUserInfo, getUserCourses } from '../+store/user-state';
+import { getUserCourses, updateUserInfo } from '../+store/user-state';
 export default {
   name: 'Profile',
   components: {
     AppEditForm,
-    AppLoader
+    AppLoader,
   },
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   computed: {
-    ...mapGetters(['userInfo', 'userCourses']),
+    ...mapGetters('userModule', ['userInfo', 'userCourses']),
     courses() {
-      return this.userCourses.map(c => c.title);
-    }
+      return this.userCourses.map((c) => c.title);
+    },
   },
   async created() {
     try {
       this.loading = true;
-      await this[setUserInfo]();
+      await this[updateUserInfo]()
       await this[getUserCourses]();
     } catch (err) {
       console.error(err);
@@ -125,8 +125,8 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapActions([setUserInfo, getUserCourses])
-  }
+    ...mapActions('userModule', [updateUserInfo, getUserCourses]),
+  },
 };
 </script>
 

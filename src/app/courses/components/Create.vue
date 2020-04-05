@@ -2,7 +2,11 @@
   <v-col cols="12" md="12" align="center">
     <v-card width="600" elevation="20">
       <v-card-text>
-        <v-form @submit.native="createCourse" v-model="valid" class="pa-6 submit">
+        <v-form
+          @submit.native="createCourse"
+          v-model="valid"
+          class="pa-6 submit"
+        >
           <v-col cols="12" md="12" align="center">
             <h2>Create Course</h2>
           </v-col>
@@ -113,13 +117,13 @@ export default {
       selectedFile: null,
       startDate: null,
       description: '',
-      students: []
+      students: [],
     };
   },
   methods: {
-    ...mapActions([createCourse]),
+    ...mapActions('courseModule', [createCourse]),
     async createCourse(ev) {
-      ev.preventDefault()
+      ev.preventDefault();
       await this[createCourse]({
         title: this.title,
         duration: this.duration,
@@ -128,11 +132,11 @@ export default {
         description: this.description,
         selectedFile: this.selectedFile,
         imageUrl: null,
-        students: this.students
+        students: this.students,
       });
       this.$router.push('/course/list');
-    }
-  }
+    },
+  },
 };
 </script>
 

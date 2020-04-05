@@ -89,49 +89,40 @@
 <script>
 import { logout } from '../../auth/+store/auth-state';
 import { mapGetters, mapActions } from 'vuex';
-import {
-  getCourseSearch,
-  getAllCourses
-} from '../../courses/+store/course-state';
+import { getCourseSearch } from '../../courses/+store/course-state';
 export default {
   name: 'Navbar',
   data() {
     return {
       searchInput: '',
-      drawer: false
+      drawer: false,
     };
   },
   computed: {
-    ...mapGetters(['isAuth', 'allCourses'])
+    ...mapGetters(['isAuth', 'courseModule/allCourses']),
   },
   watch: {
     drawer(val) {
       this.$emit('onDrawer', val);
-    }
+    },
   },
   methods: {
-    ...mapActions([logout, getCourseSearch, getAllCourses]),
+    ...mapActions([logout]),
+    ...mapActions('courseModule', [getCourseSearch]),
     logout() {
       this[logout]();
       this.$router.push('/');
     },
     async search() {
-      await this[getAllCourses]();
       this[getCourseSearch]({
-        courses: this.allCourses,
-        searchInput: this.searchInput
+        searchInput: this.searchInput,
       });
       this.searchInput = '';
       if (this.$route.path !== '/course/list') {
         this.$router.push('/course/list');
       }
-    }
-  }
-  // created() {
-  //   this.$bus.$on("logged", () => {
-  //     this.isAuth = this.$store.state.authState.isAuth;
-  //   });
-  // }
+    },
+  },
 };
 </script>
 

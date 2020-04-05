@@ -39,7 +39,10 @@
 
         <v-list-item v-if="isAuth">
           <v-list-item-title>
-            <router-link :to="{ path: '/course/create' }" class="router-link mr-8">
+            <router-link
+              :to="{ path: '/course/create' }"
+              class="router-link mr-8"
+            >
               <v-btn text>
                 <v-icon>create</v-icon>
                 <span class="mr-4">Create Course</span>
@@ -81,7 +84,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { logout } from '../../auth/+store/auth-state';
+import {
+  getCourseSearch,
+  getAllCourses,
+} from '../../courses/+store/course-state';
 export default {
   name: 'Sidenav',
   data() {
@@ -93,24 +101,39 @@ export default {
   computed: {
     ...mapGetters(['isAuth']),
     modifyDrawer: {
-      get: function() {
+      get: function () {
         return this.drawer;
       },
-      set: function(val) {
-        this.$emit('onDrawer', val)
-      }
-    }
+      set: function (val) {
+        this.$emit('onDrawer', val);
+      },
+    },
   },
   props: {
     drawer: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
-    search() {},
-    logout() {}
-  }
+    ...mapActions([logout]),
+    ...mapActions('courseModule', [logout, getCourseSearch, getAllCourses]),
+    async search() {
+      await this[getAllCourses]();
+      this[getCourseSearch]({
+        courses: this.allCourses,
+        searchInput: this.searchInput,
+      });
+      this.searchInput = '';
+      if (this.$route.path !== '/course/list') {
+        this.$router.push('/course/list');
+      }
+    },
+    logout() {
+      this[logout]();
+      this.$router.push('/');
+    },
+  },
 };
 </script>
 

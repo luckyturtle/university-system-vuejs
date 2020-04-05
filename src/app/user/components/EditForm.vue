@@ -17,7 +17,7 @@
           <div class="d-flex align-center justify-center">
             <v-img
               alt="University Logo"
-              class="shrink logo-img "
+              class="shrink logo-img"
               contain
               src="/images/university-logo.png"
               transition="scale-transition"
@@ -110,28 +110,28 @@ export default {
       dialog: false,
       valid: false,
       isUpdating: false,
-      user: null
+      user: null,
     };
   },
   computed: {
-    ...mapGetters(['userInfo'])
+    ...mapGetters('userModule', ['userInfo']),
   },
   created() {
     this.user = {
       name: this.userInfo.name,
       email: this.userInfo.email,
-      department: this.userInfo.department
+      department: this.userInfo.department,
     };
   },
 
   methods: {
-    ...mapActions([updateUserInfo]),
+    ...mapActions('userModule', [updateUserInfo]),
     async updateForm(ev) {
-      ev.preventDefault()
+      ev.preventDefault();
       try {
         await this[updateUserInfo](this.user);
       } catch (err) {
-        this.clearForm();
+        this.resetForm();
       }
       this.isUpdating = false;
       this.dialog = false;
@@ -140,10 +140,10 @@ export default {
       this.user = {
         name: this.userInfo.name,
         email: this.userInfo.email,
-        department: this.userInfo.department
+        department: this.userInfo.department,
       };
-    }
-  }
+    },
+  },
 };
 </script>
 

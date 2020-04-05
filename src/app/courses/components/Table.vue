@@ -112,7 +112,12 @@
     </template>
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editStudent(item)">mdi-pencil</v-icon>
-      <v-icon small @click="deleteStudent(item)">mdi-delete</v-icon>
+      <v-icon
+        v-if="course._acl.creator === userInfo._id"
+        small
+        @click="deleteStudent(item)"
+        >mdi-delete</v-icon
+      >
     </template>
   </v-data-table>
 </template>
@@ -124,7 +129,7 @@ import {
   getAllStudents,
   postStudent,
   updateStudent,
-  removeStudent
+  removeStudent,
 } from '../+store/course-state';
 
 export default {
@@ -140,22 +145,22 @@ export default {
         {
           text: 'Full name',
           align: 'start',
-          value: 'name'
+          value: 'name',
         },
         { text: 'Town', value: 'town' },
         { text: 'Age', value: 'age' },
         { text: 'Groupe', value: 'groupe' },
-        { text: 'Actions', value: 'action', sortable: false }
+        { text: 'Actions', value: 'action', sortable: false },
       ],
       dialog: false,
       editedIndex: -1,
-      students: this.course.students,
+      students: [],
       editedStudent: {
         name: '',
         town: '',
         age: '',
         groupe: '',
-        courses: []
+        courses: [],
       },
       selectedStudent: null,
       defaultStudent: {
@@ -163,37 +168,48 @@ export default {
         town: '',
         age: '',
         groupe: '',
-        courses: []
-      }
+        courses: [],
+      },
+      url: this.$route.params.id,
     };
   },
 
   props: {
-    course: {
-      type: Object,
-      required: true
-    }
+    courseId: {
+      type: String,
+      required: true,
+    },
   },
 
   computed: {
-    ...mapGetters(['allStudents']),
+    ...mapGetters('courseModule', ['currentCourse', 'allStudents']),
+    ...mapGetters('userModule', ['userInfo']),
 
+    course() {
+      return this.currentCourse(this.courseId);
+    },
     formTitle() {
       return this.editedIndex === -1 ? 'Add Student' : 'Edit Student';
-    }
+    },
   },
 
   watch: {
     dialog(val) {
       val || this.close();
-    }
+    },
   },
 
   created() {
+    this.students = this.course.students;
     this[getAllStudents]();
   },
   methods: {
-    ...mapActions([getAllStudents, postStudent, updateStudent, removeStudent]),
+    ...mapActions('courseModule', [
+      getAllStudents,
+      postStudent,
+      updateStudent,
+      removeStudent,
+    ]),
 
     editStudent(student) {
       this.dialog = true;
@@ -206,7 +222,7 @@ export default {
         return;
       }
       this[removeStudent]({ student, course: this.course });
-      this.students = this.students.filter(s => s !== student);
+      this.students = this.students.filter((s) => s !== student);
     },
 
     close() {
@@ -237,8 +253,8 @@ export default {
     },
     select() {
       this.editedStudent = this.selectedStudent;
-    }
-  }
+    },
+  },
 };
 </script>
 

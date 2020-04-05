@@ -31,7 +31,7 @@
 
           <v-checkbox
             v-model="checkbox"
-            :rules="[v => !!v || 'You must agree to continue!']"
+            :rules="[(v) => !!v || 'You must agree to continue!']"
             label="Do you agree?"
             required
           ></v-checkbox>
@@ -49,11 +49,11 @@
         </v-form>
       </v-card-text>
       <v-divider></v-divider>
-      <v-card-actions class="d-flex justify-center ">
+      <v-card-actions class="d-flex justify-center">
         <span class="mr-4">
           Don't have an account?
         </span>
-        <router-link :to="{path: '/auth/register'}">Register</router-link>
+        <router-link :to="{ path: '/auth/register' }">Register</router-link>
       </v-card-actions>
     </v-card>
   </v-col>
@@ -63,6 +63,7 @@
 import { rules } from '../../utils/validators';
 import { login } from '../+store/auth-state';
 import { mapActions } from 'vuex';
+import { updateUserInfo } from '../../user/+store/user-state';
 
 export default {
   name: 'Login',
@@ -74,28 +75,29 @@ export default {
       show: false,
       checkbox: false,
       username: '',
-      password: ''
+      password: '',
     };
   },
   methods: {
     ...mapActions([login]),
+    ...mapActions('userModule', [updateUserInfo]),
     async login(ev) {
-      ev.preventDefault()
+      ev.preventDefault();
       try {
         this.loading = true;
         await this[login]({
           username: this.username,
-          password: this.password
+          password: this.password,
         });
+        await this[updateUserInfo]();
         this.loading = false;
         this.$router.push('/');
       } catch (err) {
         this.loading = false;
         this.$refs.loginForm.reset();
       }
-      // this.$bus.$emit('logged', 'User logged');
-    }
-  }
+    },
+  },
 };
 </script>
 

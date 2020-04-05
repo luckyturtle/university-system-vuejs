@@ -1,22 +1,21 @@
 import { toastSuccess, toastError } from '@/plugins/toasted';
 import { http } from '../../services/httpClient';
-
 const initialState = {
   isAuth: localStorage.getItem('authtoken') !== null,
-  authtoken: localStorage.getItem('authtoken')
+  authtoken: localStorage.getItem('authtoken'),
 };
 
 export const actionTypes = {
-  login: '[AUTH] LOGIN SUCCESS',
-  register: '[AUTH] REGISTER SUCCESS',
-  logout: '[AUTH] LOGOUT SUCCESS'
+  login: 'auth/LOGIN SUCCESS',
+  register: 'auth/REGISTER SUCCESS',
+  logout: 'auth/LOGOUT SUCCESS',
 };
 
 export const { login, logout, register } = actionTypes;
 
 const getters = {
-  authtoken: state => state.authtoken,
-  isAuth: state => state.isAuth
+  authtoken: (state) => state.authtoken,
+  isAuth: (state) => state.isAuth,
 };
 
 const actions = {
@@ -30,7 +29,7 @@ const actions = {
       commit(login, {
         userInfo: data,
         authtoken: data._kmd.authtoken,
-        isAuth: true
+        isAuth: true,
       });
     } catch (err) {
       toastError(`Something went wrong! ${err}`);
@@ -48,7 +47,7 @@ const actions = {
     } catch (err) {
       toastError(`Something went wrong! ${err}`);
     }
-  }
+  },
 };
 
 const mutations = {
@@ -57,12 +56,12 @@ const mutations = {
   },
   [logout](state) {
     Object.assign(state, { isAuth: false, authtoken: null, userInfo: null });
-  }
+  },
 };
 
 export default {
   state: initialState,
   getters,
   actions,
-  mutations
+  mutations,
 };
