@@ -4,7 +4,7 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
-  default as courseState,
+  default as courseModule,
   createCourse
 } from '../../courses/+store/course-state';
 import { AppCreate } from '../../courses/components';
@@ -36,10 +36,11 @@ describe('Testing AppCreate.vue', () => {
 
     store = new Vuex.Store({
       modules: {
-        courseState: {
+        courseModule: {
+          namespaced: true,
           state,
           actions,
-          getters: courseState.getters
+          getters: courseModule.getters
         }
       }
     });

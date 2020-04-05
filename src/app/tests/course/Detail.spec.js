@@ -4,7 +4,7 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
-  default as courseState,
+  default as courseModule,
   getAllCourses,
   deleteCourse
 } from '../../courses/+store/course-state';
@@ -55,7 +55,7 @@ describe('Testing AppDetail.vue', () => {
       ]
     };
 
-    mutations = courseState.mutations;
+    mutations = courseModule.mutations;
 
     actions = {
       [getAllCourses]: jest.fn()
@@ -63,11 +63,12 @@ describe('Testing AppDetail.vue', () => {
 
     store = new Vuex.Store({
       modules: {
-        courseState: {
+        courseModule: {
+          namespaced: true,
           state,
           actions,
           mutations,
-          getters: courseState.getters
+          getters: courseModule.getters
         }
       }
     });
@@ -112,7 +113,7 @@ describe('Testing AppDetail.vue', () => {
   });
 
   it('Go to next course route after click "next" arrow button', async done => {
-    const list = wrapper.vm.$store.getters.allCourses;
+    const list = wrapper.vm.$store.getters['courseModule/allCourses'];
     const onboardingIdx = wrapper.vm.$data.onboarding;
     const nextId = list[onboardingIdx + 1]._id;
     const route = `/course/${nextId}`;
@@ -127,7 +128,7 @@ describe('Testing AppDetail.vue', () => {
   });
 
   it('Go to previous course route after click "prev" arrow button', async done => {
-    const list = wrapper.vm.$store.getters.allCourses;
+    const list = wrapper.vm.$store.getters['courseModule/allCourses'];
     const onboardingIdx = wrapper.vm.$data.onboarding;
     const nextId = onboardingIdx - 1 >= 0 ? list[onboardingIdx - 1]._id : list[list.length - 1]._id
     const route = `/course/${nextId}`;

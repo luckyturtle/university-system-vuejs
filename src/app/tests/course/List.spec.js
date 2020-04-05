@@ -4,10 +4,11 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
-  default as courseState,
+  default as courseModule,
   getAllCourses,
-  deleteCourse
+  deleteCourse,
 } from '../../courses/+store/course-state';
+import { default as userModule } from '../../user//+store/user-state';
 import AppList from '../../courses/components/List.vue';
 
 Vue.use(Vuetify);
@@ -33,6 +34,9 @@ describe('Testing AppList.vue', () => {
     state = {
       allCourses: [
         {
+          _acl: {
+            creator: '5e80d30f63d86c0016de2582',
+          },
           _id: '2d6144c4ca822500155df3b9',
           title: 'Typescript',
           duration: '4',
@@ -40,11 +44,14 @@ describe('Testing AppList.vue', () => {
           students: [],
           description: 'Test test',
           available: true,
-          imageUrl: 'https://test.test'
-        }
+          imageUrl: 'https://test.test',
+        },
       ],
       courseSearch: [
         {
+          _acl: {
+            creator: '5e80d30f63d86c0016de2582',
+          },
           _id: '2d6144c4ca822500155df3b9',
           title: 'Typescript',
           duration: '4',
@@ -52,34 +59,45 @@ describe('Testing AppList.vue', () => {
           students: [],
           description: 'Test test',
           available: true,
-          imageUrl: 'https://test.test'
-        }
-      ]
+          imageUrl: 'https://test.test',
+        },
+      ],
     };
 
-    mutations = courseState.mutations;
+    mutations = courseModule.mutations;
 
     actions = {
       [deleteCourse]: jest.fn(),
-      [getAllCourses]: jest.fn()
+      [getAllCourses]: jest.fn(),
     };
 
     store = new Vuex.Store({
       modules: {
-        courseState: {
+        courseModule: {
+          namespaced: true,
           state,
           actions,
           mutations,
-          getters: courseState.getters
-        }
-      }
+          getters: courseModule.getters,
+        },
+        userModule: {
+          namespaced: true,
+          state: {
+            userInfo: {
+              _id: '5e80d30f63d86c0016de2582',
+            },
+          },
+          actions: {},
+          getters: userModule.getters,
+        },
+      },
     });
 
     options = {
       store,
       router,
       localVue,
-      vuetify
+      vuetify,
     };
 
     wrapper = shallowMount(AppList, options);
@@ -90,7 +108,8 @@ describe('Testing AppList.vue', () => {
   });
 
   it('Renders the course title', () => {
-    const courseTitle = wrapper.vm.$store.getters.allCourses[0].title;
+    const courseTitle =
+      wrapper.vm.$store.getters['courseModule/allCourses'][0].title;
     const htmlElement = wrapper.find('.title').html();
     expect(htmlElement).toContain(courseTitle);
   });
@@ -98,7 +117,7 @@ describe('Testing AppList.vue', () => {
   it('Calls "deleteCourse" when "delete" button is clicked', async () => {
     const deleteCourse = jest.fn();
     wrapper.setMethods({
-      deleteCourse
+      deleteCourse,
     });
     wrapper.find('.btn-delete').trigger('click');
     await wrapper.vm.$nextTick();
@@ -111,12 +130,11 @@ describe('Testing AppList.vue', () => {
     expect(actions[deleteCourse]).toHaveBeenCalled();
   });
   it('Direct to "/course/:id" after click button "View"', async () => {
-    const course = store.getters.allCourses[0];
+    const course = wrapper.vm.$store.getters['courseModule/allCourses'][0];
     const route = `/course/${course._id}`;
     wrapper.find('.btn-detail').trigger('click');
     await wrapper.vm.$nextTick();
     wrapper.vm.$router.push(route);
     expect(wrapper.vm.$route.path).toEqual(route);
   });
-
 });

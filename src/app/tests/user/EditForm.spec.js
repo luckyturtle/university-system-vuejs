@@ -4,7 +4,7 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
-  default as userState,
+  default as userModule,
   updateUserInfo
 } from '../../user/+store/user-state';
 import AppEditForm from '../../user/components/EditForm.vue';
@@ -54,7 +54,7 @@ describe('Testing AppProfile.vue', () => {
       ]
     };
 
-    mutations = userState.mutations;
+    mutations = userModule.mutations;
 
     actions = {
       [updateUserInfo]: jest.fn()
@@ -62,11 +62,12 @@ describe('Testing AppProfile.vue', () => {
 
     store = new Vuex.Store({
       modules: {
-        userState: {
+        userModule: {
+          namespaced: true,
           state,
           actions,
           mutations,
-          getters: userState.getters
+          getters: userModule.getters
         }
       }
     });

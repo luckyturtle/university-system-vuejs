@@ -4,7 +4,7 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils';
 import {
-  default as authState,
+  default as authModule,
   login
 } from '../../auth/+store/auth-state';
 import AppLogin from '../../auth/components/Login.vue';
@@ -31,7 +31,7 @@ describe('Testing AppLogin.vue', () => {
     router = new VueRouter();
     state = {};
 
-    mutations = authState.mutations;
+    mutations = authModule.mutations;
 
     actions = {
       [login]: jest.fn()
@@ -39,11 +39,11 @@ describe('Testing AppLogin.vue', () => {
 
     store = new Vuex.Store({
       modules: {
-        authState: {
+        authModule: {
           state,
           actions,
           mutations,
-          getters: authState.getters
+          getters: authModule.getters
         }
       }
     });

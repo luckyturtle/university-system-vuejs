@@ -4,8 +4,8 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import {
-  default as userState,
-  setUserInfo,
+  default as userModule,
+  updateUserInfo,
   getUserCourses
 } from '../../user/+store/user-state';
 import AppProfile from '../../user/components/Profile.vue';
@@ -55,20 +55,21 @@ describe('Testing AppProfile.vue', () => {
       ]
     };
 
-    mutations = userState.mutations;
+    mutations = userModule.mutations;
 
     actions = {
       [getUserCourses]: jest.fn(),
-      [setUserInfo]: jest.fn()
+      [updateUserInfo]: jest.fn()
     };
 
     store = new Vuex.Store({
       modules: {
-        userState: {
+        userModule: {
+          namespaced: true,
           state,
           actions,
           mutations,
-          getters: userState.getters
+          getters: userModule.getters
         }
       }
     });
@@ -87,14 +88,14 @@ describe('Testing AppProfile.vue', () => {
 
   it('Render the user full name', async () => {
     await wrapper.vm.$nextTick();
-    const userFullName = wrapper.vm.$store.getters.userInfo.name;
+    const userFullName = wrapper.vm.$store.getters['userModule/userInfo'].name;
     const htmlElement = wrapper.find('.fullname').html();
     expect(htmlElement).toContain(userFullName);
   });
 
-  it('Dispatched actions "getUserCourses" and "setUserInfo" when component is created', async () => {
+  it('Dispatched actions "getUserCourses" and "updateUserInfo" when component is created', async () => {
     await wrapper.vm.$nextTick();
     expect(actions[getUserCourses]).toHaveBeenCalled();
-    expect(actions[setUserInfo]).toHaveBeenCalled();
+    expect(actions[updateUserInfo]).toHaveBeenCalled();
   });
 });
