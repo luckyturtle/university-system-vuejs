@@ -1,4 +1,4 @@
-## university-system
+## University System
 
 You could view University System App [Here](https://university-system-vuejs.herokuapp.com/)
 
