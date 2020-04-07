@@ -36,7 +36,7 @@
                 :append-icon="showRepeatPass ? 'mdi-eye' : 'mdi-eye-off'"
                 :rules="[
                   rules.required('Repeat password'),
-                  rules.sameAs(password)
+                  rules.sameAs(password),
                 ]"
                 :type="showRepeatPass ? 'text' : 'password'"
                 label="Repeat Password"
@@ -45,7 +45,7 @@
               ></v-text-field>
               <v-checkbox
                 v-model="checkbox"
-                :rules="[v => !!v || 'You must agree to continue!']"
+                :rules="[(v) => !!v || 'You must agree to continue!']"
                 label="Do you agree?"
                 required
               ></v-checkbox>
@@ -115,14 +115,13 @@
 <script>
 import { rules } from '../../utils/validators';
 import { register } from '../+store/auth-state';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Register',
   data() {
     return {
       rules,
-      loading: false,
       valid: true,
       checkbox: false,
       showRepeatPass: false,
@@ -132,33 +131,36 @@ export default {
       rePassword: '',
       username: '',
       email: '',
-      department: ''
+      department: '',
     };
+  },
+  computed: {
+    ...mapGetters({
+      loading: 'isLoading',
+    }),
   },
   methods: {
     ...mapActions([register]),
     async register(ev) {
       ev.preventDefault();
       try {
-        this.loading = true;
         await this[register]({
           username: this.username,
           password: this.password,
           name: this.name,
           email: this.email,
-          department: this.department
+          department: this.department,
         });
-        this.loading = false;
         this.$router.push('/auth/login');
       } catch (err) {
-        this.loading = false;
+        this.$store.commit('isLoading');
         this.$refs.registerForm.reset();
       }
     },
     reset() {
       this.$refs.registerForm.reset();
-    }
-  }
+    },
+  },
 };
 </script>
 

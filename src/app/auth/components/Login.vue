@@ -62,14 +62,12 @@
 <script>
 import { rules } from '../../utils/validators';
 import { login } from '../+store/auth-state';
-import { mapActions } from 'vuex';
-import { updateUserInfo } from '../../user/+store/user-state';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Login',
   data() {
     return {
-      loading: false,
       rules,
       valid: true,
       show: false,
@@ -78,22 +76,23 @@ export default {
       password: '',
     };
   },
+  computed: {
+    ...mapGetters({
+      loading: 'isLoading',
+    }),
+  },
   methods: {
     ...mapActions([login]),
-    ...mapActions('userModule', [updateUserInfo]),
     async login(ev) {
       ev.preventDefault();
       try {
-        this.loading = true;
         await this[login]({
           username: this.username,
           password: this.password,
         });
-        await this[updateUserInfo]();
-        this.loading = false;
         this.$router.push('/');
       } catch (err) {
-        this.loading = false;
+        this.$store.commit('isLoading');
         this.$refs.loginForm.reset();
       }
     },
