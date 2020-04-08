@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-col class="text-center">
+    <v-col class="text-center content">
       <v-row rows="12" md="12">
         <v-img
           src="images/university-logo.png"
@@ -21,7 +21,7 @@
           <br />University System
         </h1>
 
-        <p class="subheading font-weight-regular">
+        <p class="subheading font-regular title ">
           In this system, you can start to create course then
           <br />add new student to it
         </p>
@@ -77,6 +77,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content {
+  background-color: rgba(225,226,226,.3);
+  border-radius: 20px;
+}
 .welcome {
   display: flex;
   flex-direction: column;
