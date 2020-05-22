@@ -4,8 +4,8 @@ import { cacheAdapterEnhancer } from 'axios-extensions';
 import { toastError } from '@/plugins/toasted';
 
 const baseUrl = 'https://baas.kinvey.com';
-const appKey = 'kid_BJ7Jli3_L';
-const appSecret = 'c9d13a92cbf444c2af26ecbb1d1011be';
+const appKey = 'kid_SyNzxPBoL';
+const appSecret = 'a367e377a745436ba078f8870a6d5568';
 const dbCollections = ['courses', 'students'];
 
 const cacheConfig = {
